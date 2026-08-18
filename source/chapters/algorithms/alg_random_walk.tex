@@ -2,7 +2,6 @@
 \caption{Random walk frontier expansion}\label{alg:random_walk}
 \begin{algorithmic}[1]
 \Procedure{RandomWalk}{$\mathcal{I}, \mathcal{T}, \mathcal{S}, p_{\text{connect}}, \Sigma, N_s, T_B$}
-    \State{} $\mathcal{C} \gets \{\,\}$ \Comment{candidate set}
     \If{$u < p_{\text{connect}}$, \quad $u \sim \mathcal{U}[0,1]$}
         \State{} $x_{\text{random}} \gets \Call{Sample}{\mathcal{S}}$ \Comment{sample from other direction's solved buffer}
     \Else{}
@@ -12,10 +11,8 @@
     \For{$t = 1, \ldots{}, T_B$}
         \State{} $a_t = \epsilon_t, \quad \epsilon_t \sim \mathcal{N}(0, \Sigma)$ 
         \State{} $s_t \sim P(s_t \mid s_{t-1}, a_t)$ \Comment{simulate random walk from nearest neighbor}
-        \If{$t \bmod N_s = 0$}
-            \State{} $\mathcal{C} \gets \mathcal{C} \cup \{s_t\}$ \Comment{subsample}
-        \EndIf{}
     \EndFor{}
+    \State{} $\mathcal{C} \gets \Call{Subsample}{\{s_1, \ldots{}, s_{T_B}\}, N_s}$ \Comment{candidate set: $N_s$ subsampled states}
     \State{} \Return{} $\mathcal{C}$
 \EndProcedure{}
 \end{algorithmic}
