@@ -4,7 +4,6 @@
     "latex-workshop.latex.clean.fileTypes": [
         "*.aux",
         "*.fls",
-        "*.synctex.gz",
         "*.out",
         "*.log",
         "*.fdb_latexmk",
