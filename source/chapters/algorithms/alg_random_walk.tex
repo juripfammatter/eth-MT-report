@@ -1,12 +1,12 @@
 \begin{algorithm}[H]
 \caption{Random walk frontier expansion}\label{alg:random_walk}
 \begin{algorithmic}[1]
-\Procedure{RandomWalk}{$\mathcal{I}, \mathcal{T}, \mathcal{I}', p_{\text{connect}}, N_s$}
+\Procedure{RandomWalk}{$\mathcal{I}, \mathcal{T}, \mathcal{S}, p_{\text{connect}}, \Sigma, N_s, T_B$}
     \State{} $\mathcal{C} \gets \{\,\}$ \Comment{candidate set}
     \If{$u < p_{\text{connect}}$, \quad $u \sim \mathcal{U}[0,1]$}
-        \State{} $x_{\text{random}} \gets \Call{Sample}{\mathcal{I}'}$ \Comment{sample target}
+        \State{} $x_{\text{random}} \gets \Call{Sample}{\mathcal{S}}$ \Comment{sample from other direction's solved buffer}
     \Else{}
-        \State{} $x_{\text{random}} \gets \Call{Sample}{\mathcal{T}}$ \Comment{sample task space}
+        \State{} $x_{\text{random}} \gets \Call{Sample}{\mathcal{T}}$ \Comment{sample from task space}
     \EndIf{}
     \State{} $s_0 \gets \Call{NearestNeighbor}{x_{\text{random}}, \mathcal{I}}$
     \For{$t = 1, \ldots{}, T_B$}

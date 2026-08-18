@@ -13,11 +13,11 @@ Built with `latexmk` using XeLaTeX; output goes to `build/`:
 cd source && latexmk -xelatex -outdir=../build main.tex
 ```
 
-### Individual algorithm PDFs
+### Individual algorithm figures
 
-The three appendix algorithms live in `source/chapters/algorithms/` and are
+The four appendix algorithms live in `source/chapters/algorithms/` and are
 `\input` by both the thesis and a standalone driver, so there is a single source
-for each. To export them as individual, tightly cropped PDFs into
+for each. To export them as individual, tightly cropped PDFs and SVGs into
 `build/algorithms/`:
 
 ```bash

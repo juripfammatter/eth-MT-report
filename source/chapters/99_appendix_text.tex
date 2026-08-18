@@ -2,16 +2,19 @@
 
 \section{Algorithms}\label{sec:appendix_algorithms}
 
-\Cref{alg:training_loop,alg:random_walk,alg:threshold} summarize the proposed method in
-pseudocode. \Cref{alg:training_loop} is the bidirectional training loop that alternates
-between exploration on random-walk candidates and exploitation on the frontier and
-solved buffers, \Cref{alg:random_walk} expands the frontier by simulating action-noise
-random walks from the nearest neighbor of a sampled task-space point, and
+\Cref{alg:training_loop,alg:random_walk,alg:threshold,alg:mix} summarize the proposed
+method in pseudocode. \Cref{alg:training_loop} is the bidirectional training loop that
+alternates between exploration on random-walk candidates and exploitation on the
+frontier and solved buffers, \Cref{alg:random_walk} expands the frontier by simulating
+action-noise random walks from the nearest neighbor of a sampled task-space point,
 \Cref{alg:threshold} sorts the collected rollouts into the frontier buffer $F$ and the
-solved buffer $S$ based on their return.
+solved buffer $S$ based on their return, and \Cref{alg:mix} rebuilds the working set
+$\mathcal{I}$ from those two buffers, replaying a fraction $\rho$ of solved states.
 
 \input{chapters/algorithms/alg_training_loop}
 
 \input{chapters/algorithms/alg_random_walk}
 
 \input{chapters/algorithms/alg_threshold}
+
+\input{chapters/algorithms/alg_mix}

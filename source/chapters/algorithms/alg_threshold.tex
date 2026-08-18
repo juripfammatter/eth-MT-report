@@ -10,9 +10,9 @@
         \Else{}
             \State{} $x \gets \tau.\Call{First}{\,}$
         \EndIf{}
-        \If{$R_{\text{min}} < r < R_{\text{max}}$}
+        \If{$R_{\text{min}} \le r \le R_{\text{max}}$}
             \State{} $F.\Call{Append}{x}$ \Comment{threshold}
-        \ElsIf{$R_{\text{max}} < r$}
+        \ElsIf{$r > R_{\text{max}}$}
             \State{} $S.\Call{Append}{x}$
         \EndIf{}
     \EndFor{}

@@ -1,0 +1,11 @@
+\begin{algorithm}[H]
+\caption{Rebuild of the intermediate set from frontier and solved buffers}\label{alg:mix}
+\begin{algorithmic}[1]
+\Procedure{Mix}{$F, S, \rho, M_I$}
+    \State{} $n_S \gets \min\left(\lfloor \rho \, M_I \rfloor, \; |S|\right)$ \Comment{replayed solved states}
+    \State{} $n_F \gets \min\left(M_I - n_S, \; |F|\right)$ \Comment{rest from the frontier}
+    \State{} $\mathcal{I} \gets \Call{Subsample}{S, n_S} \cup \Call{Subsample}{F, n_F}$ \Comment{uniform, without replacement}
+    \State{} \Return{} $\mathcal{I}$
+\EndProcedure{}
+\end{algorithmic}
+\end{algorithm}

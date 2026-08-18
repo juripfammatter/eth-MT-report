@@ -1,25 +1,35 @@
 \begin{algorithm}[H]
 \caption{Bidirectional frontier training loop}\label{alg:training_loop}
 \begin{algorithmic}[1]
-\Require{} goal $G$, initial distribution $p_0$, task space $\mathcal{T}$
-\Require{} buffer max sizes $M_F, M_S$, number of subsamples $N_s$
-\Require{} $N_{\text{exploit}}, N_{\text{explore}}$ (both even), $R_{\text{min}}, R_{\text{max}}$
+\Require{\ 
+\newline  initial distribution $p_0$, goal $G$, task space $\mathcal{T}$, goal-conditioned policy $\pi$,
+\newline $N_{\text{exploit}}, N_{\text{explore}}$ (both even), $R_{\text{min}}, R_{\text{max}}$, replay ratio $\rho$, connection ratio $p_{\text{connect}}$,
+\newline buffer max sizes $M_F, M_S, M_C$, intermediate set size $M_I$, number of subsamples $N_s$,
+\newline Brownian horizon $T_B$, action noise covariance $\Sigma$,}
 \Statex{}
-\State{} \textbf{Initialize} $F^G, F^S$ with max size $M_F$; \quad $S^G, S^S$ with max size $M_S$
-\State{} \textbf{Initialize} $\mathcal{I}^G \gets \{s_0\}, \; s_0 \sim p_0$; \quad $\mathcal{I}^S \gets \{G\}$
+\State{\textbf{Initialize}
+\newline $\mathcal{I}^G \gets \{s_0\}, \; s_0 \sim p_0$; $\mathcal{I}^S \gets \{G\}$}
+\newline $C^G, C^S$ empty with max size $M_C$;
+\newline $F^G, F^S$ empty with max size $M_F$; 
+\newline $S^G, S^S$ empty with max size $M_S$; 
 \Statex{}
 \For{$e = 1, \ldots{}, E$}
-    \State{} $C^G \gets \Call{RandomWalk}{\mathcal{I}^G, \mathcal{T}, \mathcal{I}^S, p_{\text{connect}}, N_s}$ \Comment{frontier $\xrightarrow{\text{rw}}$ expanded candidates}
-    \State{} $C^S \gets \Call{RandomWalk}{\mathcal{I}^S, \mathcal{T}, \mathcal{I}^G, p_{\text{connect}}, N_s}$
+    \State{} $C^G \gets C^G \cup \Call{RandomWalk}{\mathcal{I}^G, \mathcal{T}, S^S, p_{\text{connect}}, \Sigma, N_s, T_B}$ \Comment{frontier $\xrightarrow{\text{rw}}$ candidates}
+    \State{} $C^S \gets C^S \cup \Call{RandomWalk}{\mathcal{I}^S, \mathcal{T}, S^G, p_{\text{connect}}, \Sigma, N_s, T_B}$
     \Statex{}
-    \State{} $D^G_{\text{explore}} \gets \Call{Train}{p_0, C^G, N_{\text{explore}}/2}$ \Comment{explore: train on rw candidates}
-    \State{} $D^S_{\text{explore}} \gets \Call{Train}{C^S, G, N_{\text{explore}}/2}$
+    \State{} $D^G_{\text{explore}} \gets \Call{Rollout}{\pi, p_0, C^G, N_{\text{explore}}/2}$ \Comment{explore: rw candidates}
+    \State{} $D^S_{\text{explore}} \gets \Call{Rollout}{\pi, C^S, G, N_{\text{explore}}/2}$
     \Statex{}
-    \State{} $D^G_{\text{exploit}} \gets \Call{Train}{p_0, F^G \cup S^G, N_{\text{exploit}}/2}$ \Comment{exploit: train on frontier}
-    \State{} $D^S_{\text{exploit}} \gets \Call{Train}{F^S \cup S^S, G, N_{\text{exploit}}/2}$ \Comment{and replay solved}
+    \State{} $D^G_{\text{exploit}} \gets \Call{Rollout}{\pi, p_0, \mathcal{I}^G, N_{\text{exploit}}/2}$ \Comment{exploit: frontier + replayed solved}
+    \State{} $D^S_{\text{exploit}} \gets \Call{Rollout}{\pi, \mathcal{I}^S, G, N_{\text{exploit}}/2}$
+    \Statex{}
+    \State{} $\pi \gets \Call{PPO}{\pi, \; D^G_{\text{explore}} \cup D^S_{\text{explore}} \cup D^G_{\text{exploit}} \cup D^S_{\text{exploit}}}$ \Comment{one shared policy update}
     \Statex{}
     \State{} $F^G, S^G \gets \Call{Threshold}{D^G_{\text{exploit}}, D^G_{\text{explore}}, R_{\text{min}}, R_{\text{max}}, F^G, S^G, \text{goal}}$
     \State{} $F^S, S^S \gets \Call{Threshold}{D^S_{\text{exploit}}, D^S_{\text{explore}}, R_{\text{min}}, R_{\text{max}}, F^S, S^S, \text{start}}$
+    \Statex{}
+    \State{} $\mathcal{I}^G \gets \Call{Mix}{F^G, S^G, \rho, M_I}$ \Comment{update intermediate sets}
+    \State{} $\mathcal{I}^S \gets \Call{Mix}{F^S, S^S, \rho, M_I}$
 \EndFor{}
 \end{algorithmic}
 \end{algorithm}
