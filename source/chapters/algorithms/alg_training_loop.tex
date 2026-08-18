@@ -1,0 +1,25 @@
+\begin{algorithm}[H]
+\caption{Bidirectional frontier training loop}\label{alg:training_loop}
+\begin{algorithmic}[1]
+\Require{} goal $G$, initial distribution $p_0$, task space $\mathcal{T}$
+\Require{} buffer max sizes $M_F, M_S$, number of subsamples $N_s$
+\Require{} $N_{\text{exploit}}, N_{\text{explore}}$ (both even), $R_{\text{min}}, R_{\text{max}}$
+\Statex{}
+\State{} \textbf{Initialize} $F^G, F^S$ with max size $M_F$; \quad $S^G, S^S$ with max size $M_S$
+\State{} \textbf{Initialize} $\mathcal{I}^G \gets \{s_0\}, \; s_0 \sim p_0$; \quad $\mathcal{I}^S \gets \{G\}$
+\Statex{}
+\For{$e = 1, \ldots{}, E$}
+    \State{} $C^G \gets \Call{RandomWalk}{\mathcal{I}^G, \mathcal{T}, \mathcal{I}^S, p_{\text{connect}}, N_s}$ \Comment{frontier $\xrightarrow{\text{rw}}$ expanded candidates}
+    \State{} $C^S \gets \Call{RandomWalk}{\mathcal{I}^S, \mathcal{T}, \mathcal{I}^G, p_{\text{connect}}, N_s}$
+    \Statex{}
+    \State{} $D^G_{\text{explore}} \gets \Call{Train}{p_0, C^G, N_{\text{explore}}/2}$ \Comment{explore: train on rw candidates}
+    \State{} $D^S_{\text{explore}} \gets \Call{Train}{C^S, G, N_{\text{explore}}/2}$
+    \Statex{}
+    \State{} $D^G_{\text{exploit}} \gets \Call{Train}{p_0, F^G \cup S^G, N_{\text{exploit}}/2}$ \Comment{exploit: train on frontier}
+    \State{} $D^S_{\text{exploit}} \gets \Call{Train}{F^S \cup S^S, G, N_{\text{exploit}}/2}$ \Comment{and replay solved}
+    \Statex{}
+    \State{} $F^G, S^G \gets \Call{Threshold}{D^G_{\text{exploit}}, D^G_{\text{explore}}, R_{\text{min}}, R_{\text{max}}, F^G, S^G, \text{goal}}$
+    \State{} $F^S, S^S \gets \Call{Threshold}{D^S_{\text{exploit}}, D^S_{\text{explore}}, R_{\text{min}}, R_{\text{max}}, F^S, S^S, \text{start}}$
+\EndFor{}
+\end{algorithmic}
+\end{algorithm}

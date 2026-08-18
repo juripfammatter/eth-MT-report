@@ -1,0 +1,22 @@
+\begin{algorithm}[H]
+\caption{Return-based thresholding of rollouts into frontier and solved buffers}\label{alg:threshold}
+\begin{algorithmic}[1]
+\Procedure{Threshold}{$D_{\text{exploit}}, D_{\text{explore}}, R_{\text{min}}, R_{\text{max}}, F, S, \text{mode}$}
+    \State{} $D \gets D_{\text{exploit}} \cup D_{\text{explore}}$
+    \State{} $R, \mathcal{T}\!r \gets D$ \Comment{returns and trajectories}
+    \For{$(r, \tau) \in (R, \mathcal{T}\!r)$}
+        \If{$\text{mode} = \text{goal}$}
+            \State{} $x \gets \tau.\Call{Last}{\,}$ \Comment{extract relevant state}
+        \Else{}
+            \State{} $x \gets \tau.\Call{First}{\,}$
+        \EndIf{}
+        \If{$R_{\text{min}} < r < R_{\text{max}}$}
+            \State{} $F.\Call{Append}{x}$ \Comment{threshold}
+        \ElsIf{$R_{\text{max}} < r$}
+            \State{} $S.\Call{Append}{x}$
+        \EndIf{}
+    \EndFor{}
+    \State{} \Return{} $F, S$
+\EndProcedure{}
+\end{algorithmic}
+\end{algorithm}

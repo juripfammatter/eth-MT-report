@@ -1,0 +1,26 @@
+%==============================================================================
+% Driver to typeset a single algorithm from chapters/algorithms/ on its own
+% page, using the exact same preamble as the thesis.
+%
+% Not meant to be compiled directly -- see scripts/export-algorithms.sh, which
+% invokes it as:
+%   xelatex -jobname=<name> "\def\algfile{<name>}\def\algnum{<n>}\input{chapters/algorithms/standalone}"
+%==============================================================================
+
+\documentclass[10pt,a4paper]{report}
+
+\usepackage[mt,fs,english]{packages/ethrsl}
+
+\input{preambles/rsl_preamble}
+\input{preambles/layout}
+
+\pagestyle{empty}
+
+\begin{document}
+
+% Match the numbering the algorithm carries in the thesis
+\setcounter{algorithm}{\numexpr\algnum-1\relax}
+
+\input{chapters/algorithms/\algfile}
+
+\end{document}
