@@ -1,0 +1,46 @@
+% Tables
+\usepackage{tabularx}
+
+\usepackage{subcaption}
+
+% Page margins
+\usepackage[top=4cm, bottom=3cm, left=3cm, right=3cm]{geometry}
+
+% fonts
+\usepackage{fontspec}
+
+\usepackage{float}
+
+% algorithm environment
+\usepackage{algorithm, setspace}
+\usepackage[noend]{algpseudocode}
+%change color of comment to teal
+\algrenewcommand{\algorithmiccomment}[1]{\hfill{\color{teal}$\triangleright$ #1}}
+
+% set the size of a section
+\usepackage{parskip}
+% Reduce paragraph spacing (default is usually 12pt plus 4pt minus 4pt)
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+
+% centered X column
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+
+% length that stores the value of the tabcolsep while it is adjusted (used for tables)
+\newlength{\oldtabcolsep}
+
+% Remove "Chapter XX" text from chapter headings
+\usepackage{titlesec}
+\titleformat{\chapter}[hang]
+{\normalfont\huge\bfseries}{}{0pt}{\huge}
+%leftmargin, spacebefore, spaceafter
+\titlespacing{\chapter}{0pt}{-50pt}{5pt}
+
+% Reduce spacing after sections and subsections
+\titlespacing{\section}{0pt}{12pt}{6pt}
+\titlespacing{\subsection}{0pt}{10pt}{5pt}
+\titlespacing{\subsubsection}{0pt}{8pt}{4pt}
+
+% Reduce spacing around figures
+\setlength{\floatsep}{6pt plus 2pt minus 2pt}        % between floats
+\setlength{\textfloatsep}{8pt plus 2pt minus 4pt}    % between float and text
+\setlength{\intextsep}{6pt plus 2pt minus 2pt}       % around in-text floats
