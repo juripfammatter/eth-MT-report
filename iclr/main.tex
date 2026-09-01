@@ -1,0 +1,84 @@
+%!LW recipe=latexmk (latexmkrc)
+%==============================================================================
+% ICLR 2026 conference paper
+% Based on the official ICLR 2026 template (see reference/ for the unmodified
+% formatting instructions). Build: latexmk main.tex   (output -> ../build-iclr)
+%
+% Conference requirements (ICLR 2026):
+%   - Main text: max 9 pages at submission (10 pages for rebuttal/camera-ready).
+%     References and appendices do not count toward the limit.
+%   - Double-blind: keep \iclrfinalcopy commented out for submission; the style
+%     file then replaces the author block with "Anonymous authors" automatically.
+%   - Citations via natbib: \citet{} in-sentence, \citep{} in parentheses.
+%==============================================================================
+
+\documentclass{article} % For LaTeX2e
+\usepackage{iclr2026_conference,times}
+
+% Optional math commands from https://github.com/goodfeli/dlbook_notation.
+\input{math_commands.tex}
+
+\usepackage{hyperref}
+\usepackage{url}
+
+% For the algorithm box in the method section:
+%\usepackage{algorithm}
+%\usepackage{algorithmic}
+
+% TODO Set the paper title
+\title{Learning-Based Navigation \\ (Working Title)}
+
+% Authors must not appear in the submitted version. They are hidden
+% as long as the \iclrfinalcopy macro remains commented out below.
+% Non-anonymous submissions will be rejected without review.
+\author{Juri Pfammatter \\
+Robotic Systems Lab\\
+ETH Z\"urich\\
+Z\"urich, Switzerland \\
+\texttt{jpfammatter@ethz.ch} \\
+}
+
+%\iclrfinalcopy % Uncomment for camera-ready version, but NOT for submission.
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+    % ~150-200 words, one paragraph, five moves in order:
+    %   1. the problem
+    %   2. why prior work is insufficient
+    %   3. one-sentence method statement (``Our approach consists of X followed by Y'')
+    %   4. the single novelty
+    %   5. the headline result
+    The abstract goes here.
+\end{abstract}
+
+\input{sections/01_introduction}
+\input{sections/02_related_work}
+\input{sections/03_preliminaries}
+\input{sections/04_method}
+\input{sections/05_experiments}
+\input{sections/06_conclusion}
+
+\subsubsection*{Reproducibility statement}
+% Optional; does not count toward the page limit.
+% TODO Describe the efforts made to ensure reproducibility (code, seeds,
+% hyperparameters, hardware), or remove this block.
+
+% Author contributions and acknowledgements reveal identity: keep them commented
+% out for the double-blind submission, uncomment for the camera-ready version
+% (together with \iclrfinalcopy).
+%\subsubsection*{Author contributions}
+% TODO
+
+%\subsubsection*{Acknowledgements}
+% TODO Funding acknowledgements go here (not in the author footnote).
+
+\bibliography{references}
+\bibliographystyle{iclr2026_conference}
+
+\appendix
+\input{sections/99_appendix}
+
+\end{document}

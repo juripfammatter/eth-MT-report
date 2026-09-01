@@ -1,4 +1,6 @@
 {
+    // build the active project on save
+    "latex-workshop.latex.autoBuild.run": "onSave",
     "latex-workshop.latex.outDir": "../build",
     "latex-workshop.latex.clean.subfolder.enabled": true,
     "latex-workshop.latex.clean.fileTypes": [

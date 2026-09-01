@@ -1,0 +1,41 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build ICLR paper",
+            "type": "shell",
+            "command": "latexmk",
+            "args": [
+                "main.tex"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/iclr"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "detail": "latexmk (pdflatex via iclr/.latexmkrc) -> build-iclr/main.pdf"
+        },
+        {
+            "label": "Build thesis",
+            "type": "shell",
+            "command": "latexmk",
+            "args": [
+                "-xelatex",
+                "-outdir=../build",
+                "main.tex"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/source"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": [],
+            "detail": "latexmk (xelatex) -> build/main.pdf"
+        }
+    ]
+}
