@@ -4,38 +4,30 @@
 % ~0.75-1 page, partitioned into 3-4 labeled thematic blocks.
 % Each block MUST close with an explicit delta sentence:
 %   ``In contrast, our method \ldots'' / ``\ldots is unique to our approach.''
-
-\paragraph{Imitation Learning:}
-\begin{itemize}
-    \item RSI
-    \item Backplay
-\end{itemize}
-% ... closing delta sentence.
-
 \paragraph{Automatic Curriculum Learning:}
-Portelas summary paper
+Portelas summary paper \citep{portelas2020automatic}:
 \begin{itemize}
     \item environment/terrain
           \begin{itemize}
-              \item PLR
-              \item ALP GMM
-              \item (ADR)
+              \item PLR~\citep{jiang2021prioritized}
+              \item ALP GMM~\citep{portelas2020teacher}
+              \item (ADR)~\citep{akkaya2019solving}
           \end{itemize}
     \item rewards
           \begin{itemize}
-              \item RND
+              \item RND~citep{burda2018exploration}
           \end{itemize}
     \item start states
           \begin{itemize}
-              \item Reverse Curriculum
-              \item RSI
-              \item Backplay
+              \item Reverse Curriculum~\citep{florensa2017reverse}
+              \item RSI~\citep{peng2018deepmimic}
+              \item Backplay~\citep{resnick2018backplay}
           \end{itemize}
-    \item goals (GCRL survey)
+    \item goals (GCRL survey)~\citep{liu2022goal}
           \begin{itemize}
-              \item GoalGAN
-              \item HGG
-              \item OUTPACE
+              \item GoalGAN~\citep{florensa2018automatic}
+              \item HGG~\citep{ren2019exploration}
+              \item OUTPACE~\citep{cho2023outcome}
           \end{itemize}
 \end{itemize}
 % ... closing delta sentence.
@@ -45,7 +37,20 @@ Portelas summary paper
 
 \paragraph{Quadrupedal Locomotion:}
 % ... closing delta sentence.
-\begin{itemize}
-    \item game inspired curriculum
-\end{itemize}
+% \begin{itemize}
+%     \item dense reward and parametric terrain curriculum
+%           \begin{itemize}
+%               \item game inspired curriculum~\citep{rudin2022learning}
+%               \item particle filter based parametric terrain curriculum~\citep{lee2020learning}
+%           \end{itemize}
+%     \item use of RSI: OPT-mimic~\citep{fuchioka2023opt}
+%     \item hand designed curriculum for jumping~\citep{atanassov2024curriculum}
+%     \item RND~\citep{schwarke2023curiosity}
+% \end{itemize}
 
+Current state-of-the-art quadrupedal locomotion methods don't train on sparse rewards, long horizon tasks and often rely on reference motions or hand-designed curricula.
+For example, Rudin et.al.~\citet{rudin2022learning} utilize a game-inspired terrain curriculum with dense rewards. Lee et.al.~\citet{lee2020learning} replace the game-inspired curriculum with a adaptive particle filter based parametric terrain curriculum.
+Fuchioka et.al.~\citet{fuchioka2023opt} use trajectory optimization to find a solution and then train with RSI~\citep{peng2018deepmimic} as an initialization curriculum.
+Atanassov et.al.~\citet{atanassov2024curriculum} hand-design a three-stage curriculum for jumping onto a box. In the first step, they use RSI~\citep{peng2018deepmimic} to learn jumping motions, and conclude that RSI is required to learn the jumping task.
+Schwarke et.al.~\citet{schwarke2023curiosity} use RND~\citep{burda2018exploration} to learn a quadrupedal loco-manipulation task on sparse rewards by extending RND~\citep{burda2018exploration} with a curiosity state.
+Our method differs from these as it learns on sparse rewards directly, without reference motions, hand-designed curricula and without additional rewards.

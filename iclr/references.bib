@@ -1,24 +1,134 @@
-@incollection{Bengio+chapter2007,
-author = {Bengio, Yoshua and LeCun, Yann},
-booktitle = {Large Scale Kernel Machines},
-publisher = {MIT Press},
-title = {Scaling Learning Algorithms Towards {AI}},
-year = {2007}
+
+% Imitation learning
+@article{peng2018deepmimic,
+  title     = {Deepmimic: Example-guided deep reinforcement learning of physics-based character skills},
+  author    = {Peng, Xue Bin and Abbeel, Pieter and Levine, Sergey and Van de Panne, Michiel},
+  journal   = {ACM Transactions On Graphics (TOG)},
+  volume    = {37},
+  number    = {4},
+  pages     = {1--14},
+  year      = {2018},
+  publisher = {ACM New York, NY, USA}
+}
+@article{resnick2018backplay,
+  title   = {Backplay:" man muss immer umkehren"},
+  author  = {Resnick, Cinjon and Raileanu, Roberta and Kapoor, Sanyam and Peysakhovich, Alexander and Cho, Kyunghyun and Bruna, Joan},
+  journal = {arXiv preprint arXiv:1807.06919},
+  year    = {2018}
 }
 
-@article{Hinton06,
-author = {Hinton, Geoffrey E. and Osindero, Simon and Teh, Yee Whye},
-journal = {Neural Computation},
-pages = {1527--1554},
-title = {A Fast Learning Algorithm for Deep Belief Nets},
-volume = {18},
-year = {2006}
+% Curriculum learning
+@article{portelas2020automatic,
+  title   = {Automatic curriculum learning for deep rl: A short survey},
+  author  = {Portelas, R{\'e}my and Colas, C{\'e}dric and Weng, Lilian and Hofmann, Katja and Oudeyer, Pierre-Yves},
+  journal = {arXiv preprint arXiv:2003.04664},
+  year    = {2020}
+}
+@inproceedings{jiang2021prioritized,
+  title        = {Prioritized level replay},
+  author       = {Jiang, Minqi and Grefenstette, Edward and Rockt{\"a}schel, Tim},
+  booktitle    = {International Conference on Machine Learning},
+  pages        = {4940--4950},
+  year         = {2021},
+  organization = {PMLR}
+}
+@inproceedings{portelas2020teacher,
+  title        = {Teacher algorithms for curriculum learning of deep rl in continuously parameterized environments},
+  author       = {Portelas, R{\'e}my and Colas, C{\'e}dric and Hofmann, Katja and Oudeyer, Pierre-Yves},
+  booktitle    = {Conference on Robot Learning},
+  pages        = {835--853},
+  year         = {2020},
+  organization = {PMLR}
+}
+@article{akkaya2019solving,
+  title   = {Solving rubik's cube with a robot hand},
+  author  = {Akkaya, Ilge and Andrychowicz, Marcin and Chociej, Maciek and Litwin, Mateusz and McGrew, Bob and Petron, Arthur and Paino, Alex and Plappert, Matthias and Powell, Glenn and Ribas, Raphael and others},
+  journal = {arXiv preprint arXiv:1910.07113},
+  year    = {2019}
+}
+@article{burda2018exploration,
+  title   = {Exploration by random network distillation},
+  author  = {Burda, Yuri and Edwards, Harrison and Storkey, Amos and Klimov, Oleg},
+  journal = {arXiv preprint arXiv:1810.12894},
+  year    = {2018}
+}
+@inproceedings{florensa2017reverse,
+  title        = {Reverse curriculum generation for reinforcement learning},
+  author       = {Florensa, Carlos and Held, David and Wulfmeier, Markus and Zhang, Michael and Abbeel, Pieter},
+  booktitle    = {Conference on robot learning},
+  pages        = {482--495},
+  year         = {2017},
+  organization = {PMLR}
+}
+%GCRL
+@article{liu2022goal,
+  title   = {Goal-conditioned reinforcement learning: Problems and solutions},
+  author  = {Liu, Minghuan and Zhu, Menghui and Zhang, Weinan},
+  journal = {arXiv preprint arXiv:2201.08299},
+  year    = {2022}
+}
+@inproceedings{florensa2018automatic,
+  title        = {Automatic goal generation for reinforcement learning agents},
+  author       = {Florensa, Carlos and Held, David and Geng, Xinyang and Abbeel, Pieter},
+  booktitle    = {International conference on machine learning},
+  pages        = {1515--1528},
+  year         = {2018},
+  organization = {PMLR}
+}
+@article{ren2019exploration,
+  title   = {Exploration via hindsight goal generation},
+  author  = {Ren, Zhizhou and Dong, Kefan and Zhou, Yuan and Liu, Qiang and Peng, Jian},
+  journal = {Advances in Neural Information Processing Systems},
+  volume  = {32},
+  year    = {2019}
+}
+@article{cho2023outcome,
+  title   = {Outcome-directed reinforcement learning by uncertainty \& temporal distance-aware curriculum goal generation},
+  author  = {Cho, Daesol and Lee, Seungjae and Kim, H Jin},
+  journal = {arXiv preprint arXiv:2301.11741},
+  year    = {2023}
 }
 
-@book{goodfellow2016deep,
-title={Deep learning},
-author={Goodfellow, Ian and Bengio, Yoshua and Courville, Aaron and Bengio, Yoshua},
-volume={1},
-year={2016},
-publisher={MIT Press}
+%Quadruped locomotion
+@inproceedings{rudin2022learning,
+  title        = {Learning to walk in minutes using massively parallel deep reinforcement learning},
+  author       = {Rudin, Nikita and Hoeller, David and Reist, Philipp and Hutter, Marco},
+  booktitle    = {Conference on robot learning},
+  pages        = {91--100},
+  year         = {2022},
+  organization = {PMLR}
+}
+@article{lee2020learning,
+  title     = {Learning quadrupedal locomotion over challenging terrain},
+  author    = {Lee, Joonho and Hwangbo, Jemin and Wellhausen, Lorenz and Koltun, Vladlen and Hutter, Marco},
+  journal   = {Science robotics},
+  volume    = {5},
+  number    = {47},
+  pages     = {eabc5986},
+  year      = {2020},
+  publisher = {American Association for the Advancement of Science}
+}
+@inproceedings{fuchioka2023opt,
+  title        = {Opt-mimic: Imitation of optimized trajectories for dynamic quadruped behaviors},
+  author       = {Fuchioka, Yuni and Xie, Zhaoming and Van de Panne, Michiel},
+  booktitle    = {2023 IEEE International Conference on Robotics and Automation (ICRA)},
+  pages        = {5092--5098},
+  year         = {2023},
+  organization = {IEEE}
+}
+@article{atanassov2024curriculum,
+  title     = {Curriculum-based reinforcement learning for quadrupedal jumping: A reference-free design},
+  author    = {Atanassov, Vassil and Ding, Jiatao and Kober, Jens and Havoutis, Ioannis and Della Santina, Cosimo},
+  journal   = {IEEE Robotics \& Automation Magazine},
+  volume    = {32},
+  number    = {2},
+  pages     = {35--48},
+  year      = {2024},
+  publisher = {IEEE}
+}
+@inproceedings{schwarke2023curiosity,
+  title     = {Curiosity-driven learning of joint locomotion and manipulation tasks},
+  author    = {Schwarke, Clemens and Klemm, Victor and Van der Boon, Matthijs and Bjelonic, Marko and Hutter, Marco},
+  booktitle = {7th Annual Conference on Robot Learning},
+  year      = {2023}
 }
