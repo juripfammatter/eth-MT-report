@@ -1,5 +1,6 @@
 \section{Method}
 \label{sec:method}
+In the following, we first describe our method's frontier expansion mechanism for the backwards expansion, and how it extends RC's expansion mechanism to provide coverage of the task space and thus the initial distribution. Then we show how the same mechanism can be applied to the forwards expansion by substituting the start state with the goal state. Finally, we combine the two into our main contribution: a bidirectional expansion mechanism that expands the curriculum from both the start and goal states, leading to more sample efficient and robust learning.
 
 % ~2-2.5 pages.
 % Schematic Figure 2 (system overview) near the top: \label{fig:method}.
@@ -11,8 +12,28 @@
 
 % Overview with a figure
 \subsection{Incremental Spatial Expansion}
-% Detailed explanation of the expansion mechanism
+\begin{itemize}
+    \item explain RC shortly
+    \item we extend the skill frontier by the spatial frontier to cover the task space and thus the initial distribution
+    \item we separate successful and frontier states, and then mix them.
+    \item Exploit: train on reward frontier -> improve policy; train on successes -> mitigate catastrophic forgetting
+    \item Explore: seed random walks in the reward frontier -> discover feasible states in close (in env steps) proximity
+\end{itemize}
 
+% Detailed explanation of the expansion mechanism
+For the detailed pseudo-code we defer to Appendix~\ref{sec:appendix}.
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[width=\linewidth]{img/graphics/sheme_full.pdf}
+    \end{center}
+    \caption{Sample figure caption.}
+\end{figure}
 
 \subsection{Bidirectional Expansion}
 % Explanation of bidirectionality and connect
+
+\begin{itemize}
+    \item forwards expansion: train policy on $(\rho_0, g_i)$ instead of $(s_i, g_0)$
+    \item bidirectional expansion: train one shared policy on $(\rho_0, g_i)$ and $(s_i, g_0)$; envs are split evenly between the two expansion (but could be weighted differently)
+    \item connect: like in rrt connect, choosing samples from the other frontier instead of a random sample from the task space results in growing towards each other. In many cases this is more sample efficient.
+\end{itemize}

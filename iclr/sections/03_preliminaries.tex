@@ -1,18 +1,25 @@
-\section{Preliminaries}
-\label{sec:preliminaries}
+\section{Preliminaries}\label{sec:preliminaries}
 
 % ~0.5-0.75 page total.
 
-\subsection{Problem formulation}
-\label{sec:problem_formulation}
+\subsection{Goal Conditioned Markov Decision Process}\label{sec:problem_formulation}
 
 % Write out the MDP tuple explicitly, e.g.
 %   $\mathcal{M} = (\mathcal{S}, \mathcal{A}, P, r, \gamma, \rho_0)$
 % plus the RL objective $J(\pi)$.
 
-\subsection{Curriculum definition}
-\label{sec:curriculum_definition}
+% Use notation from GCRL survey
+
+\subsection{Curriculum}\label{sec:curriculum}
 
 % RFCL Sec. 3.2 is the model to copy:
 % a curriculum is a sequence of (initial-state or goal) distributions
 % $\rho_0, \rho_1, \ldots$ together with an explicit advancement criterion.
+
+\subsection{Assumptions}\label{sec:assumptions}
+\begin{itemize}
+    \item access to uniform samples from a task space (subspace of state space)
+    \item access to random walk rollouts in the state space
+    \item reset agent to arbitrary states in the state space
+    \item at least one known start state and one known goal state
+\end{itemize}

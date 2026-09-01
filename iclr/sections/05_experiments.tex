@@ -1,26 +1,71 @@
-\section{Experiments}
-\label{sec:experiments}
-
 % ~2-2.5 pages.
-% Open with explicitly numbered research questions:
-%   (RQ1) ...  (RQ2) ...  (RQ3) ...
+\section{Experiments}\label{sec:experiments}
 
-\subsection{Main benchmark: climbing the box}
-\label{sec:exp_main}
+We conduct four experiments to answer the following research questions:
+\begin{enumerate}
+    \item Does our method outperform state-of-the-art curriculum learning methods on a high dimensional quadrupedal locomotion task with sparse rewards and long horizons?
+    \item Does expanding the curriculum bidirectionally improve sample efficiency and robustness compared to unidirectional expansion?
+    \item Does our method lead to more diverse paths and emergent behaviors compared to no curriculum or unidirectional curricula?
+    \item Does our method transfer to real-world terrains and tasks, demonstrating its practical applicability and robustness in real-world scenarios?
+\end{enumerate}
+
+\subsection{Main benchmark: climbing the box}\label{sec:exp_main}
 
 % TODO (answers RQ1)
+\begin{figure}[h]
+    \begin{center}
+        \includegraphics[width=0.7\linewidth]{img/sb/eval_comparison_41_up_clean_comp.png}
+    \end{center}
+    \caption{Sample figure caption.}
+\end{figure}
 
-\subsection{Ablations: climb-up / climb-down symmetry}
-\label{sec:exp_ablations}
+\subsection{Ablations: climb-up / climb-down symmetry}\label{sec:exp_ablations}
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/sb/eval_comparison_72_up.png}
+        \caption{Sample subfigure caption.}
+        \label{fig:eval_comparison_72_up}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/sb/eval_comparison_72_down.png}
+        \caption{Sample subfigure caption.}
+        \label{fig:eval_comparison_72_down}
+    \end{subfigure}
+    \caption{Sample figure caption.}
+    \label{fig:eval_comparison_72}
+\end{figure}
+% TODO: remove padding in figures etc
 
 % TODO (answers RQ2)
 
-\subsection{Emergent behavior: path diversity}
-\label{sec:exp_emergent}
-
+\subsection{Emergent behavior: path diversity}\label{sec:exp_emergent}
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/dt/route_attempts_model_1999_headline.png}
+        \caption{Sample subfigure caption.}
+        \label{fig:eval_comparison_72_up}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/dt/trajectories_model_1999_headline.png}
+        \caption{Sample subfigure caption.}
+        \label{fig:eval_comparison_72_down}
+    \end{subfigure}
+    \caption{Sample figure caption.}
+    \label{fig:eval_comparison_72}
+\end{figure}
+% TODO: align horizontally
 % TODO (answers RQ3)
 
-\subsection{Real-world terrains}
-\label{sec:exp_real_world}
-
+\subsection{Real-world terrains}\label{sec:exp_real_world}
+% TODO: generate graphics
+% TODO: add table with learning iterations needed
 % TODO
