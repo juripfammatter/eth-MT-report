@@ -55,14 +55,23 @@ The backwards expansion mechanism stated in the previous section can be applied 
 
 \paragraph{Bidirectional Expansion:} Combining the two expansion mechanisms, we train one shared goal conditioned policy on both $(\rho_0, g_i)$ and $(s_i, g_0)$, with training budget split between the two expansions. This leads to a diverse, incrementally expanding curriculum that covers the reachable task space from two directions. As a result, the policy is trained to reach the goal from a wide range of initial states, and to reach a wide range of goals from the start state, leading to more robust policies.
 
+\begin{wrapfigure}{r}{0.3\linewidth}
+    \centering
+    % \vspace{-\baselineskip} % add again if formatting changes
+    \includegraphics[width=\linewidth]{img/graphics/connect.pdf}
+    \caption{The forwards expansion set can be connected to the backwards
+        expansion set by sampling from the other mixed training set rather than
+        random samples from the task space.}\label{fig:connect}
+\end{wrapfigure}
 \paragraph{Connecting the two Frontiers:} In addition to the bidirectional expansion, we can also connect the two frontiers by replacing the random samples in step 1 of the spatial expansion with samples from the other frontier. For example, when expanding the forwards frontier, we sample states from the mixed training set of the backwards expansion and then find its nearest neighbors in the mixed training set of the forwards expansion. As a result, the random walks are more likely to end up closer to the to the initial distribution.
 
-\begin{figure}[h]\label{fig:method}
-    \begin{center}
-        \includegraphics[width=0.3\linewidth]{img/graphics/connect.pdf}
-    \end{center}
-    \caption{The forwards expansion set can be connected to the backwards expansion set by sampling from the other mixed training set rather than random samples from the task space.}\label{fig:connect}
-\end{figure}
+% \begin{figure}[h]\label{fig:method}
+%     \begin{center}
+%         \includegraphics[width=0.3\linewidth]{img/graphics/connect.pdf}
+%     \end{center}
+%     \caption{The forwards expansion set can be connected to the backwards expansion set by sampling from the other mixed training set rather than random samples from the task space.}\label{fig:connect}
+% \end{figure}
+
 
 This leads to a more sample efficient exploration, as the policy is trained to reach goals that are closer to the start state and initial states that are closer to the goal state. This is similar to the RRT-Connect algorithm~\citep{kuffner2000rrt}, where two trees are grown towards each other until they connect.
 
