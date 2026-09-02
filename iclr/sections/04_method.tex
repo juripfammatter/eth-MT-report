@@ -1,5 +1,4 @@
-\section{Method}
-\label{sec:method}
+\section{Method}\label{sec:method}
 In the following, we first describe our method's frontier expansion mechanism for the backwards expansion, and how it extends RC's expansion mechanism to provide coverage of the task space and thus the initial distribution. Then we show how the same mechanism can be applied to the forwards expansion by substituting the start state with the goal state. Finally, we combine the two into our main contribution: a bidirectional expansion mechanism that expands the curriculum from both the start and goal states, leading to more sample efficient and robust learning.
 
 % ~2-2.5 pages.
@@ -12,28 +11,66 @@ In the following, we first describe our method's frontier expansion mechanism fo
 
 % Overview with a figure
 \subsection{Incremental Spatial Expansion}
-\begin{itemize}
-    \item explain RC shortly
-    \item we extend the skill frontier by the spatial frontier to cover the task space and thus the initial distribution
-    \item we separate successful and frontier states, and then mix them.
-    \item Exploit: train on reward frontier -> improve policy; train on successes -> mitigate catastrophic forgetting
-    \item Explore: seed random walks in the reward frontier -> discover feasible states in close (in env steps) proximity
-\end{itemize}
 
-% Detailed explanation of the expansion mechanism
-For the detailed pseudo-code we defer to Appendix~\ref{sec:appendix}.
+\paragraph{Exploration:}
+Similar to Reverse Curriculum (RC)~\citep{florensa2017reverse} we initialize the policy training with valid states obtained from simulating random action motions in state space (Figure~\ref{fig:bwd_expansion_1}). After the training iteration, we separate frontier states ($R_{\min} < R < R_{\max}$) and successful states ($R_{\max} \leq R$), and then mix them with fixed ratios to create a balanced training set. % give better arguments here
+This set contains mostly states that are neither too hard nor too easy for the current policy, and we call this set the ``mixed'' training set.
+
+When choosing seeds for the next iteration of random walks, we add an additional criterion to enforce coverage of the task space and thus promote convergence to the initial distribution. To do so, we find the spatial frontier (Figure~\ref{fig:bwd_expansion_2}) of the explored state space by (1) sampling a set of random states from the task space, (2) compute the nearest neighbor in the
+mixed training set for each of the sampled states, and (3) select these states as the seeds for the random walks (Figure~\ref{fig:bwd_expansion_3}). Similarly to the Voronoi bias inherent in Rapidly-exploring Random Trees (RRT)~\citep{lavalle1998rapidly}, this biases the random walks towards unexplored areas of the task space, as they have a higher probability of being sampled than states in already explored areas.
+
+%TODO: replace with: (left) reward frontier computation, (right) spatial frontier computation.
 \begin{figure}[h]
+    \centering
+    \begin{subfigure}[t]{0.3\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/graphics/bwd1.pdf}
+        \caption{Starting from the goal, the policy is trained on physically valid initial states ({\color{blue} blue circles}) from random walks ({\color{teal} green lines}) seeded in the goal ({\color{teal} green circle}).}\label{fig:bwd_expansion_1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.3\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/graphics/bwd2.pdf}
+        \caption{In addition to the reward frontier ({\color{teal} light green}), the nearest neighbors of random samples from the state space determine the spatial frontier ({\color{orange} yellow circles}).}\label{fig:bwd_expansion_2}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.3\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/graphics/bwd3.pdf}
+        \caption{In the next iteration, the random walks are seeded in the spatial frontier ({\color{orange} yellow circles}), leading to more efficient exploration.}\label{fig:bwd_expansion_3}
+    \end{subfigure}
+    \caption{Backwards expansion mechanism used in the exploration step.}\label{fig:expansion}
+\end{figure}
+
+\paragraph{Exploitation:} In addition to training the policy on unseen states in the exploration step, we also continue training on the mixed training set. This has two effects: (1) training on the reward frontier improves the policy, and (2) training on successful states mitigates catastrophic forgetting. A fixed ratio of training iterations are allocated to this step. If the policy is trained on a parallelized environment, this can be done in parallel with the exploration step, which is the case in our experiments.
+
+Both the exploration and exploitation steps are repeated until the policy is able to solve the task from the initial distribution.
+
+
+\subsection{Bidirectional Expansion}
+
+\paragraph{Forwards Expansion:}
+The backwards expansion mechanism stated in the previous section can be applied to the forwards expansion by substituting the start state with the goal state. The goal conditioned policy is trained on initial states sampled from the initial distribution $\rho_0$ and goals sampled from the spatial frontier of the explored state space, i.e., $(\rho_0, g_i)$ rather than $(s_i, g_0)$. The exploration and exploitation steps are then identical, with the minor difference that the random walks are seeded in states can reach rather than states from which the goal can be reached.
+
+
+\paragraph{Bidirectional Expansion:} Combining the two expansion mechanisms, we train one shared goal conditioned policy on both $(\rho_0, g_i)$ and $(s_i, g_0)$, with training budget split between the two expansions. This leads to a diverse, incrementally expanding curriculum that covers the reachable task space from two directions. As a result, the policy is trained to reach the goal from a wide range of initial states, and to reach a wide range of goals from the start state, leading to more robust policies.
+
+\paragraph{Connecting the two Frontiers:} In addition to the bidirectional expansion, we can also connect the two frontiers by replacing the random samples in step 1 of the spatial expansion with samples from the other frontier. For example, when expanding the forwards frontier, we sample states from the mixed training set of the backwards expansion and then find its nearest neighbors in the mixed training set of the forwards expansion. As a result, the random walks are more likely to end up closer to the to the initial distribution.
+
+\begin{figure}[h]\label{fig:method}
+    \begin{center}
+        \includegraphics[width=0.3\linewidth]{img/graphics/connect.pdf}
+    \end{center}
+    \caption{The forwards expansion set can be connected to the backwards expansion set by sampling from the other mixed training set rather than random samples from the task space.}\label{fig:connect}
+\end{figure}
+
+This leads to a more sample efficient exploration, as the policy is trained to reach goals that are closer to the start state and initial states that are closer to the goal state. This is similar to the RRT-Connect algorithm~\citep{kuffner2000rrt}, where two trees are grown towards each other until they connect.
+
+To promote both even coverage of the task space and the connection of the two frontiers, we sample from both the other frontier and the task space with a fixed ratio. This ratio can be tuned to balance between exploration and exploitation, and is a hyperparameter of our method.
+
+\begin{figure}[h]\label{fig:method}
     \begin{center}
         \includegraphics[width=\linewidth]{img/graphics/sheme_full.pdf}
     \end{center}
     \caption{Sample figure caption.}
 \end{figure}
-
-\subsection{Bidirectional Expansion}
-% Explanation of bidirectionality and connect
-
-\begin{itemize}
-    \item forwards expansion: train policy on $(\rho_0, g_i)$ instead of $(s_i, g_0)$
-    \item bidirectional expansion: train one shared policy on $(\rho_0, g_i)$ and $(s_i, g_0)$; envs are split evenly between the two expansion (but could be weighted differently)
-    \item connect: like in rrt connect, choosing samples from the other frontier instead of a random sample from the task space results in growing towards each other. In many cases this is more sample efficient.
-\end{itemize}
