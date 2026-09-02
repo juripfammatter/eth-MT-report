@@ -1,4 +1,5 @@
 \section{Method}\label{sec:method}
+Our method maintains finite sets of states from which the starts and goals of each training iteration are sampled uniformly at fixed ratios; $\rho^{\mathrm{S}}_e$ and $\rho^{\mathrm{G}}_e$ in Eq.~(\ref{eq:bidirectional}) are the resulting discrete distributions, and we describe the method in terms of these sets.
 In the following, we first describe our method's frontier expansion mechanism for the backwards expansion, and how it extends RC's expansion mechanism to provide coverage of the task space and thus the initial distribution. Then we show how the same mechanism can be applied to the forwards expansion by substituting the start state with the goal state. Finally, we combine the two into our main contribution: a bidirectional expansion mechanism that expands the curriculum from both the start and goal states, leading to more sample efficient and robust learning.
 
 % ~2-2.5 pages.
