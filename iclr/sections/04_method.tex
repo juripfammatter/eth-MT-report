@@ -17,7 +17,7 @@ Similar to Reverse Curriculum (RC)~\citep{florensa2017reverse} we initialize the
 This set contains mostly states that are neither too hard nor too easy for the current policy, and we call this set the ``mixed'' training set.
 
 When choosing seeds for the next iteration of random walks, we add an additional criterion to enforce coverage of the task space and thus promote convergence to the initial distribution. To do so, we find the spatial frontier (Figure~\ref{fig:bwd_expansion_2}) of the explored state space by (1) sampling a set of random states from the task space, (2) compute the nearest neighbor in the
-mixed training set for each of the sampled states, and (3) select these states as the seeds for the random walks (Figure~\ref{fig:bwd_expansion_3}). Similarly to the Voronoi bias inherent in Rapidly-exploring Random Trees (RRT)~\citep{lavalle1998rapidly}, this biases the random walks towards unexplored areas of the task space, as they have a higher probability of being sampled than states in already explored areas.
+mixed training set for each of the sampled states, and (3) select these states as the seeds for the random walks (Figure~\ref{fig:bwd_expansion_3}). Similarly to the Voronoi bias inherent in Rapidly-exploring Random Trees (RRT)~\citep{lavalle2001randomized}, this biases the random walks towards unexplored areas of the task space, as they have a higher probability of being sampled than states in already explored areas.
 
 %TODO: replace with: (left) reward frontier computation, (right) spatial frontier computation.
 \begin{figure}[h]
