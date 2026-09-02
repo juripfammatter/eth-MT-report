@@ -13,7 +13,7 @@ In the following, we first describe our method's frontier expansion mechanism fo
 \subsection{Incremental Spatial Expansion}
 
 \paragraph{Exploration:}
-Similar to Reverse Curriculum (RC)~\citep{florensa2017reverse} we initialize the policy training with valid states obtained from simulating random action motions in state space (Figure~\ref{fig:bwd_expansion_1}). After the training iteration, we separate frontier states ($R_{\min} < R < R_{\max}$) and successful states ($R_{\max} \leq R$), and then mix them with fixed ratios to create a balanced training set. % give better arguments here
+Similar to Reverse Curriculum (RC)~\citep{florensa2017reverse} we initialize the policy training with valid states obtained from simulating random action motions in state space (Figure~\ref{fig:bwd_expansion_1}). After the training iteration, we separate frontier states ($R_{\min} < R < R_{\max}$) and successful states ($R_{\max} \leq R$), where $R$ is the return of a single rollout, i.e., a one-sample estimate of $V^{\pi}(s_0, g)$, and then mix them with fixed ratios to create a balanced training set. % give better arguments here
 This set contains mostly states that are neither too hard nor too easy for the current policy, and we call this set the ``mixed'' training set.
 
 When choosing seeds for the next iteration of random walks, we add an additional criterion to enforce coverage of the task space and thus promote convergence to the initial distribution. To do so, we find the spatial frontier (Figure~\ref{fig:bwd_expansion_2}) of the explored state space by (1) sampling a set of random states from the task space, (2) compute the nearest neighbor in the

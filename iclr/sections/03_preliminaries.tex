@@ -1,29 +1,60 @@
 \section{Preliminaries}\label{sec:preliminaries}
 
 % ~0.5-0.75 page total.
+% Notation (agreed 2026-09-02): P transition kernel, H episode horizon,
+% \mathcal{T} task space, \rho_0 initial state distribution, g^\star target goal,
+% \epsilon goal tolerance (\delta is reserved for the Dirac measure).
+% When porting the pseudocode: p_0 -> \rho_0, G -> g^\star, T_B unchanged.
 
-\subsection{Goal Conditioned Markov Decision Process}\label{sec:problem_formulation}
+\subsection{Goal-Conditioned Markov Decision Process}\label{sec:problem_formulation}
 
-% Write out the MDP tuple explicitly, e.g.
-%   $\mathcal{M} = (\mathcal{S}, \mathcal{A}, P, r, \gamma, \rho_0)$
-% plus the RL objective $J(\pi)$.
+We model the task as a goal-augmented Markov decision process (GA-MDP)~\citep{liu2022goal}
+$\mathcal{M} = \langle \mathcal{S}, \mathcal{A}, P, r, \gamma, \rho_0, \mathcal{G}, \phi \rangle$
+with state space $\mathcal{S}$, action space $\mathcal{A}$, transition kernel $P(s_{t+1} \mid s_t, a_t)$, discount factor $\gamma$, initial state distribution $\rho_0$, and goal space $\mathcal{G}$.
+The known mapping $\phi: \mathcal{S} \to \mathcal{G}$ projects a state onto the goal it achieves~\citep{andrychowicz2017hindsight}, and a goal $g \in \mathcal{G}$ is reached in state $s$ if $\lVert \phi(s) - g \rVert \le \epsilon$ for a tolerance $\epsilon$.
+% TODO: state what \phi extracts for the quadruped (e.g. base position [and heading]) once decided.
+The reward is sparse and binary,
+$r(s_t, a_t, g) = \1[\, \lVert \phi(s_{t+1}) - g \rVert \le \epsilon \,]$,
+episodes have a fixed horizon $H$, and reaching the goal does not terminate the episode, so the reward is collected in every step in which the goal condition holds.
 
-% Use notation from GCRL survey
+The agent acts with a goal-conditioned policy $\pi_\theta(a \mid s, g)$, realized in the concatenated form of universal value function approximators~\citep{schaul2015universal}: a single network receives the concatenation $[s, g]$ as its joint input, and so does the critic $V_\psi(s, g)$.
+Both are trained with PPO~\citep{schulman2017proximal} in massively parallel simulation~\citep{rudin2022learning}.
+
+For a trajectory $\tau = (s_0, a_0, \ldots, s_H)$ collected under goal $g$, we denote the discounted return by $R(\tau, g) = \sum_{t=0}^{H-1} \gamma^t\, r(s_t, a_t, g)$.
+Its expectation from a given start state is the universal value function~\citep{schaul2015universal, ren2019exploration}
+\begin{equation}\label{eq:value}
+    V^{\pi}(s_0, g) = \E_{a_t \sim \pi(\cdot \mid s_t, g),\; s_{t+1} \sim P(\cdot \mid s_t, a_t)}\left[ R(\tau, g) \right].
+\end{equation}
+Because the reward keeps accruing at the goal, $V^{\pi}(s_0, g)$ measures how quickly and how reliably $\pi$ reaches $g$ from $s_0$ and stays there, rather than a binary success.
+% If the implementation thresholds undiscounted episode sums, set \gamma = 1 in R(\tau, g) above.
+Following \citet{ren2019exploration}, a distribution $\rho$ over start--goal pairs $(s_0, g) \in \mathcal{S} \times \mathcal{G}$ defines a \emph{task}, and the performance of $\pi$ on it is
+\begin{equation}\label{eq:task_objective}
+    J_{\rho}(\pi) = \E_{(s_0, g) \sim \rho}\left[ V^{\pi}(s_0, g) \right].
+\end{equation}
+The \emph{target task} consists of the initial state distribution $\rho_0$ and a single target goal $g^\star \in \mathcal{G}$, i.e., $\rho^\star = \rho_0 \otimes \delta_{g^\star}$, and the learning objective is $\max_\theta J_{\rho^\star}(\pi_\theta)$.
 
 \subsection{Curriculum}\label{sec:curriculum}
 
-% RFCL Sec. 3.2 is the model to copy:
-% a curriculum is a sequence of (initial-state or goal) distributions
-% $\rho_0, \rho_1, \ldots$ together with an explicit advancement criterion.
+Optimizing $J_{\rho^\star}$ directly fails under sparse rewards and long horizons: a randomly initialized policy essentially never reaches $g^\star$ from $\rho_0$ and thus receives no learning signal~\citep{florensa2017reverse}.
+Curriculum learning instead trains on a sequence of easier tasks~\citep{narvekar2020curriculum, portelas2020automatic}.
+Following \citet{tao2024reverse}, we define a \emph{curriculum} as a sequence of task distributions
+\begin{equation}\label{eq:curriculum}
+    \rho_1, \rho_2, \ldots, \rho_E, \qquad \rho_e \in \Delta(\mathcal{S} \times \mathcal{G}),
+\end{equation}
+where $\rho_e$ is the distribution from which the start--goal pairs of training iteration $e$ are drawn, together with an \emph{advancement criterion} that constructs $\rho_{e+1}$ from $\rho_e$ and the experience collected with the current policy $\pi_e$.
+The intermediate tasks are auxiliary: the objective remains that of Section~\ref{sec:problem_formulation}, and the curriculum is chosen such that the policy obtained after $E$ iterations maximizes $J_{\rho^\star}(\pi_E)$~\citep{portelas2020automatic}.
+
+Besides a start-state curriculum $\rho_e = \rho^{\mathrm{S}}_e \otimes \delta_{g^\star}$~\citep{florensa2017reverse, tao2024reverse} or a goal curriculum $\rho_e = \rho_0 \otimes \rho^{\mathrm{G}}_e$~\citep{florensa2018automatic, ren2019exploration}, the joint formulation in Eq.~(\ref{eq:curriculum}) also admits the mixture
+\begin{equation}\label{eq:bidirectional}
+    \rho_e = \beta\, \rho^{\mathrm{S}}_e \otimes \delta_{g^\star} + (1 - \beta)\, \rho_0 \otimes \rho^{\mathrm{G}}_e, \qquad \beta \in [0, 1],
+\end{equation}
+which trains one shared goal-conditioned policy on intermediate starts and intermediate goals at the same time; $\beta = 1$ and $\beta = 0$ recover the unidirectional cases, and $\beta = \tfrac{1}{2}$ is the form our method instantiates (Section~\ref{sec:method}).
+% \beta = 1/2 mirrors the even N_explore/2, N_exploit/2 split in the training loop.
 
 \subsection{Assumptions}\label{sec:assumptions}
-\begin{itemize}
-    \item access to uniform samples from a task space (subspace of state space)
-    \item access to random walk rollouts in the state space
-    \item reset agent to arbitrary states in the state space
-    \item at least one known start state and one known goal state
-\end{itemize}
 
-\begin{equation*}
-    \rho_0 \subset \mathcal{T} \subseteq \mathcal{S}
-\end{equation*}
+Analogous to \citet{florensa2017reverse}, we assume that
+(A1) the simulator can be reset to arbitrary states $s \in \mathcal{S}$;
+(A2) random-walk rollouts can be simulated from any state, i.e., we can sample from $P$ under random actions;
+(A3) the initial distribution $\rho_0$ can be sampled and one goal state $s^{g} \in \mathcal{S}$ with $\phi(s^{g}) = g^\star$ is known; and
+(A4) a bounded task space $\mathcal{T} \subseteq \mathcal{G}$ that contains the target task is known and can be sampled uniformly.
