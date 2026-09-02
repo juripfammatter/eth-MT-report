@@ -15,7 +15,7 @@ Portelas summary paper \citep{portelas2020automatic}:
           \end{itemize}
     \item rewards
           \begin{itemize}
-              \item RND~citep{burda2018exploration}
+              \item RND~\citep{burda2018exploration}
           \end{itemize}
     \item start states
           \begin{itemize}
@@ -49,8 +49,8 @@ Portelas summary paper \citep{portelas2020automatic}:
 % \end{itemize}
 
 Current state-of-the-art quadrupedal locomotion methods don't train on sparse rewards, long horizon tasks and often rely on reference motions or hand-designed curricula.
-For example, Rudin et.al.~\citet{rudin2022learning} utilize a game-inspired terrain curriculum with dense rewards. Lee et.al.~\citet{lee2020learning} replace the game-inspired curriculum with a adaptive particle filter based parametric terrain curriculum.
-Fuchioka et.al.~\citet{fuchioka2023opt} use trajectory optimization to find a solution and then train with RSI~\citep{peng2018deepmimic} as an initialization curriculum.
-Atanassov et.al.~\citet{atanassov2024curriculum} hand-design a three-stage curriculum for jumping onto a box. In the first step, they use RSI~\citep{peng2018deepmimic} to learn jumping motions, and conclude that RSI is required to learn the jumping task.
-Schwarke et.al.~\citet{schwarke2023curiosity} use RND~\citep{burda2018exploration} to learn a quadrupedal loco-manipulation task on sparse rewards by extending RND~\citep{burda2018exploration} with a curiosity state.
+For example, \citet{rudin2022learning} utilize a game-inspired terrain curriculum with dense rewards.\ \citet{lee2020learning} replace the game-inspired curriculum with a adaptive particle filter based parametric terrain curriculum.
+\citet{fuchioka2023opt} use trajectory optimization to find a solution and then train with RSI~\citep{peng2018deepmimic} as an initialization curriculum.
+\citet{atanassov2024curriculum} hand-design a three-stage curriculum for jumping onto a box. In the first step, they use RSI~\citep{peng2018deepmimic} to learn jumping motions, and conclude that RSI is required to learn the jumping task.
+\citet{schwarke2023curiosity} learn a quadrupedal loco-manipulation task on sparse rewards by extending RND~\citep{burda2018exploration} with a curiosity state.
 Our method differs from these as it learns on sparse rewards directly, without reference motions, hand-designed curricula and without additional rewards.
