@@ -22,12 +22,11 @@ In the \textit{multiple terrain paths} experiments a potential-based reward shap
     r_{\mathrm{progress}}(s_t, s_{t+1}, g) = \lVert \phi(s_{t+1}) - g \rVert - \lVert \phi(s_t) - g \rVert
 \end{equation*}
 
-\subsection{Main benchmark: climbing the box}\label{sec:exp_main}
-
+\subsection{Sample Efficiency and Robustness}\label{sec:exp_main}
+To evaluate sample efficiency and robustness, we compare our method BVER against state-of-the-art curriculum learning methods on a sparse reward box climbing task. The task is defined as a goal conditioned locomotion task where the agent has to reach a target goal position on top of a box from an initial distribution of start positions in front of the box. The task is challenging due to the sparse reward signal and the long horizon required to reach the goal.
+\paragraph{Sample Efficiency:}
 The results in Figure~\ref{fig:bench} already shows a clear distinction between the vanilla PPO baseline, the curricula and the imitation learning methods (marked with $\star$). The policies trained on the initial distributions and no curriculum (vanilla PPO) are unable to solve the task, while training with random starts achieves a success rate of more than 95\%. This shows that the reward signal is attainable and the task solvable by initializing the agent closer to the goal.
 Backplay~\citep{resnick2018backplay} shows the fastest convergence, and its advantage over RSI~\citep{peng2018deepmimic} shows the importance of ordering the task over training time. For the reference-free curricula, our method BVER shows the fastest convergence and highest success rate, outperforming both RC~\citep{florensa2017reverse}, and random starts, while even surpassing RSI.
-
-To evaluate the robustness we evaluate the trained policies on (1) perturbations to the yaw-angle used in the initialization, (2) variations in start positions (goal conditioned on the target goal), and (3) variations in goal positions (initialized on the initial distribution). The results in Figure~\ref{fig:robustness} show that BVER's bidirectional curriculum leads to policies that can solve the task under various start-goal configurations, while the other curricula fail to generalize to unseen configurations.
 \begin{figure}[h]
     \centering
     \begin{subfigure}[b]{0.675\linewidth}
@@ -44,8 +43,11 @@ To evaluate the robustness we evaluate the trained policies on (1) perturbations
     \caption{Sample efficiency and robustness evaluated on a sparse reward box climbing task.}\label{fig:eval_04}
 \end{figure}
 %TODO: replace robustness figure and use the same  colors as the left plot -> move legend to the side
+\paragraph{Robustness:}
+We evaluate the trained policies on (1) perturbations to the yaw-angle used in the initialization, (2) variations in start positions (goal conditioned on the target goal), and (3) variations in goal positions (initialized on the initial distribution). The results in Figure~\ref{fig:robustness} show that BVER's bidirectional curriculum leads to policies that can solve the task under various start-goal configurations, while the other curricula fail to generalize to unseen configurations.
 
-\subsection{Ablations: climb-up / climb-down symmetry}\label{sec:exp_ablations}
+
+\subsection{Ablations: Forwards / Backwards Symmetry}\label{sec:exp_ablations}
 
 \begin{figure}[h]
     \centering

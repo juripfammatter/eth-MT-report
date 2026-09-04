@@ -77,10 +77,3 @@ The backwards expansion mechanism stated in the previous section can be applied 
 This leads to a more sample efficient exploration, as the policy is trained to reach goals that are closer to the start state and initial states that are closer to the goal state. This is similar to the RRT-Connect algorithm~\citep{kuffner2000rrt}, where two trees are grown towards each other until they connect.
 
 To promote both even coverage of the task space and the connection of the two frontiers, we sample from both the other frontier and the task space with a fixed ratio. This ratio can be tuned to balance between exploration and exploitation, and is a hyperparameter of our method.
-
-\begin{figure}[h]\label{fig:method}
-    \begin{center}
-        \includegraphics[width=\linewidth]{img/graphics/sheme_full.pdf}
-    \end{center}
-    \caption{Sample figure caption.}
-\end{figure}
