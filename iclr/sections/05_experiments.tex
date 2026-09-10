@@ -86,71 +86,81 @@ We evaluate the effect of the bidirectional expansion mechanism by comparing BVE
 % - make them smaller and more visible
 
 \paragraph{Maze Ablations}\label{sec:exp_ablations_maze}
-To evaluate the contribution of individual components of BVER we conduct further ablation studies on three maze environments similar to what is used in~\citep{florensa2017reverse,cho2023outcome}. First, we evaluate the effect of our curriculum against a baseline that does not use any curriculum and a simple curriculum that samples intermediate goals (to reach from the start) and intermediate starts (from which to reach the target goal) randomly from the free space. The results in Figure~\ref{fig:eval_comparison_u_maze_bench},\ref{fig:eval_comparison_N_maze_bench}, and~\ref{fig:eval_comparison_large_maze_bench} show that a either curriculum enables finding solutions in all three environments. In the more complex N-maze and large-maze environments, BVER shows faster convergence than the random curriculum.
+To evaluate the contribution of individual components of BVER we conduct further ablation studies on three maze environments similar to what is used in~\citep{florensa2017reverse,cho2023outcome}. First, we evaluate the effect of our curriculum against a baseline that does not use any curriculum and a simple curriculum that samples intermediate goals (to reach from the start) and intermediate starts (from which to reach the target goal) randomly from the free space. The results in Figure~\ref{fig:maze_ablation_bench} shows that a either curriculum enables finding solutions in all three environments. In the more complex \textit{N-maze} and textit{large-maze} environments, BVER shows faster convergence than the random curriculum.
 
-Similar to the box climbing experiments, we compare using only the forwards expansion, only the backwards expansion, and the bidirectional expansion in Figures~\ref{fig:eval_comparison_u_maze_abl_dir},\ref{fig:eval_comparison_N_maze_abl_dir}, and~\ref{fig:eval_comparison_large_maze_abl_dir}. In addition, we evaluate the effect of connecting the two frontiers by comparing a version of BVER that only samples from the task space to a version that samples from both the task space and the other frontier. The results in Figure~\ref{fig:eval_comparison_u_maze_abl_connect},\ref{fig:eval_comparison_N_maze_abl_connect}, and~\ref{fig:eval_comparison_large_maze_abl_connect} show that connecting the two frontiers leads to better sample efficiency in the cases where the the optimal path covers only a small fraction of the total search space. However, there is no significant difference in the connect ratio above 0.5.
+Similar to the box climbing experiments, we compare using only the forwards expansion, only the backwards expansion, and the bidirectional expansion in Figure~\ref{fig:maze_ablation_dir}. In addition, we evaluate the effect of connecting the two frontiers by comparing a version of BVER that only samples from the task space to a version that samples from both the task space and the other frontier. The results in Figure~\ref{fig:maze_ablation_connect} show that connecting the two frontiers leads to better sample efficiency in the cases where the the optimal path covers only a small fraction of the total search space. However, there is no significant difference in the connect ratio above 0.5.
 \begin{figure}[h]
     \centering
     \hfill
-    \begin{subfigure}[b]{0.26\linewidth}
+    \begin{subfigure}[c]{0.1\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/maze/layouts/maze_u.png}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[c]{0.29\linewidth}
         \centering
         \includegraphics[width=\linewidth]{img/maze/u/eval_comparison_u_maze_bench.png}
-        \caption{Benchmark.}\label{fig:eval_comparison_u_maze_bench}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[b]{0.26\linewidth}
+    \begin{subfigure}[c]{0.29\linewidth}
         \centering
         \includegraphics[width=\linewidth]{img/maze/u/eval_comparison_u_maze_abl_dir.png}
-        \caption{Direction ablation.}\label{fig:eval_comparison_u_maze_abl_dir}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[b]{0.26\linewidth}
+    \begin{subfigure}[c]{0.29\linewidth}
         \centering
         \includegraphics[width=\linewidth]{img/maze/u/eval_comparison_u_maze_abl_connect.png}
-        \caption{Connect ablation.}\label{fig:eval_comparison_u_maze_abl_connect}
     \end{subfigure}
     %
     \hfill\strut{}\\
     \hfill
-    \begin{subfigure}[b]{0.26\linewidth}
+    \begin{subfigure}[c]{0.1\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/maze/layouts/maze_serpentine.png}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[c]{0.29\linewidth}
         \centering
         \includegraphics[width=\linewidth]{img/maze/N/eval_comparison_N_maze_bench.png}
-        \caption{Benchmark.}\label{fig:eval_comparison_N_maze_bench}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[b]{0.26\linewidth}
+    \begin{subfigure}[c]{0.29\linewidth}
         \centering
         \includegraphics[width=\linewidth]{img/maze/N/eval_comparison_N_maze_abl_dir.png}
-        \caption{Direction ablation.}\label{fig:eval_comparison_N_maze_abl_dir}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[b]{0.26\linewidth}
+    \begin{subfigure}[c]{0.29\linewidth}
         \centering
         \includegraphics[width=\linewidth]{img/maze/N/eval_comparison_N_maze_abl_connect.png}
-        \caption{Connect ablation.}\label{fig:eval_comparison_N_maze_abl_connect}
     \end{subfigure}
     \hfill\strut{}\\
     %
     \hfill
-    \begin{subfigure}[b]{0.26\linewidth}
+    \begin{subfigure}[c]{0.1\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/maze/layouts/maze_scatter.png}
+        \caption{Maze Layout.}\label{fig:maze_layout}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[c]{0.29\linewidth}
         \centering
         \includegraphics[width=\linewidth]{img/maze/large/eval_comparison_large_maze_bench.png}
-        \caption{Benchmark.}\label{fig:eval_comparison_large_maze_bench}
+        \caption{Benchmark.}\label{fig:maze_ablation_bench}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[b]{0.26\linewidth}
+    \begin{subfigure}[c]{0.29\linewidth}
         \centering
         \includegraphics[width=\linewidth]{img/maze/large/eval_comparison_large_maze_abl_dir.png}
-        \caption{Direction ablation.}\label{fig:eval_comparison_large_maze_abl_dir}
+        \caption{Direction ablation.}\label{fig:maze_ablation_dir}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[b]{0.26\linewidth}
+    \begin{subfigure}[c]{0.29\linewidth}
         \centering
         \includegraphics[width=\linewidth]{img/maze/large/eval_comparison_large_maze_abl_connect.png}
-        \caption{Connect ablation.}\label{fig:eval_comparison_large_maze_abl_connect}
+        \caption{Connect ablation.}\label{fig:maze_ablation_connect}
     \end{subfigure}
     \hfill\strut{}
-    \caption{Ablations of connect ratio and directionality on three different mazes.}\label{fig:eval_maze_ablations}
+    \caption{Comparison of BVER against no curriculum PPO and random curriculum. Ablations of different components (expansion directions) and hyper-parameters (connect ratio).}\label{fig:eval_maze_ablations}
 \end{figure}
 
 % TODO (answers RQ2)
