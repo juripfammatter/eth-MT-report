@@ -85,6 +85,71 @@ We evaluate the trained policies on (1) perturbations to the yaw-angle used in t
     \caption{Ablations on the box climbing task show that combining forward and backward expansions leads to the best results irrespective of direction (up or down) and box height.}\label{fig:eval_ablations}
 \end{figure}
 
+\paragraph{Maze Ablations}\label{sec:exp_ablations_maze}
+\begin{figure}[h]
+    \centering
+    \hfill
+    \begin{subfigure}[b]{0.3\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/maze/u/eval_comparison_u_maze_bench.png}
+        \caption{U-maze benchmark.}\label{fig:eval_comparison_u_maze_bench}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.3\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/maze/u/eval_comparison_u_maze_abl_connect.png}
+        \caption{U-maze connect ablation.}\label{fig:eval_comparison_u_maze_abl_connect}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.3\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/maze/u/eval_comparison_u_maze_abl_dir.png}
+        \caption{U-maze direction ablation.}\label{fig:eval_comparison_u_maze_abl_dir}
+    \end{subfigure}
+    %
+    \hfill\strut{}\\
+    \hfill
+    \begin{subfigure}[b]{0.3\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/maze/N/eval_comparison_N_maze_bench.png}
+        \caption{N-maze benchmark.}\label{fig:eval_comparison_N_maze_bench}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.3\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/maze/N/eval_comparison_N_maze_abl_connect.png}
+        \caption{N-maze connect ablation.}\label{fig:eval_comparison_N_maze_abl_connect}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.3\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/maze/N/eval_comparison_N_maze_abl_dir.png}
+        \caption{N-maze direction ablation.}\label{fig:eval_comparison_N_maze_abl_dir}
+    \end{subfigure}
+    \hfill\strut{}\\
+    %
+    \hfill
+    \begin{subfigure}[b]{0.3\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/maze/large/eval_comparison_large_maze_bench.png}
+        \caption{Large-maze benchmark.}\label{fig:eval_comparison_large_maze_bench}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.3\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/maze/large/eval_comparison_large_maze_abl_connect.png}
+        \caption{Large-maze connect ablation.}\label{fig:eval_comparison_large_maze_abl_connect}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.3\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/maze/large/eval_comparison_large_maze_abl_dir.png}
+        \caption{Large-maze direction abl.}\label{fig:eval_comparison_large_maze_abl_dir}
+    \end{subfigure}
+    \hfill\strut{}
+    \caption{Ablations of connect ratio and directionality on three different mazes.}\label{fig:eval_maze_ablations}
+\end{figure}
+
 % TODO (answers RQ2)
 
 \subsection{Emergent behavior: path diversity}\label{sec:exp_emergent}
