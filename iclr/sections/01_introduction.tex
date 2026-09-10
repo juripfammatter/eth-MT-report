@@ -15,19 +15,19 @@
 
 \begin{itemize}
     \item RL algorithms like PPO do local search.
-    \item In sparse reward, long horizon tasks, local search is insufficient.
+    \item In sparse-reward, long-horizon tasks, local search is insufficient.
     \item Curriculum learning can help by providing intermediate tasks that are easier to solve and gradually increase in difficulty.
-    \item Both start state and goal state curricula create shorter (distance) tasks, but they are unidirectional.
-    \item We propose a bidirectional expansion mechanism that expands the curriculum from both the start and goal states, leading to more sample efficient and robust learning.
+    \item Both start-state and goal-state curricula create shorter (distance) tasks, but they are unidirectional.
+    \item We propose a bidirectional expansion mechanism that expands the curriculum from both the start and goal states, leading to more sample-efficient and robust learning.
 \end{itemize}
 
 %TODO: add teaser figure of the two sets growing towards each other on rocky ascent, with a caption that explains the figure and the method in one sentence.
 
 Our contributions include:
 \begin{itemize}
-    \item We propose a automatic curriculum learning method that generates both intermediate goals and start states.
+    \item We propose an automatic curriculum learning method that generates both intermediate goals and start states.
     \item We introduce a novel bidirectional expansion mechanism that expands the curriculum from both the start and goal states and increases the sample efficiency by growing the frontiers towards each other.
-    \item We compare our method against state-of-the-art curriculum learning methods on a high dimensional quadrupedal locomotion task with sparse rewards and long horizons, showing improvements in sample efficiency and robustness.
+    \item We compare our method against state-of-the-art curriculum learning methods on a high-dimensional quadrupedal locomotion task with sparse rewards and long horizons, showing improvements in sample efficiency and robustness.
 \end{itemize}
 %
 % Close with a scope line (curriculum-paper convention):

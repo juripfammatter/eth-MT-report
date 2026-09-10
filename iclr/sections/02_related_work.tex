@@ -48,8 +48,8 @@ Portelas summary paper \citep{portelas2020automatic}:
 %     \item RND~\citep{schwarke2023curiosity}
 % \end{itemize}
 
-Current state-of-the-art quadrupedal locomotion methods don't train on sparse rewards, long horizon tasks and often rely on reference motions or hand-designed curricula.
-For example, \citet{rudin2022learning} utilize a game-inspired terrain curriculum with dense rewards.\ \citet{lee2020learning} replace the game-inspired curriculum with a adaptive particle filter based parametric terrain curriculum.
+Current state-of-the-art quadrupedal locomotion methods do not train on sparse rewards, long-horizon tasks and often rely on reference motions or hand-designed curricula.
+For example, \citet{rudin2022learning} utilize a game-inspired terrain curriculum with dense rewards.\ \citet{lee2020learning} replace the game-inspired curriculum with an adaptive particle filter based parametric terrain curriculum.
 \citet{fuchioka2023opt} use trajectory optimization to find a solution and then train with RSI~\citep{peng2018deepmimic} as an initialization curriculum.
 \citet{atanassov2024curriculum} hand-design a three-stage curriculum for jumping onto a box. In the first step, they use RSI~\citep{peng2018deepmimic} to learn jumping motions, and conclude that RSI is required to learn the jumping task.
 \citet{schwarke2023curiosity} learn a quadrupedal loco-manipulation task on sparse rewards by extending RND~\citep{burda2018exploration} with a curiosity state.

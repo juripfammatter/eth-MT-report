@@ -50,17 +50,12 @@ Z\"urich, Switzerland \\
 \maketitle
 
 \begin{abstract}
-    % ~150-200 words, one paragraph, five moves in order:
-    %   1. the problem
-    %   2. why prior work is insufficient
-    %   3. one-sentence method statement (``Our approach consists of X followed by Y'')
-    %   4. the single novelty
-    %   5. the headline result
-    Current reinforcement learning (RL) methods explore the state space locally, which can be ineffective in sparse rewards and long horizon tasks.
+    Current reinforcement learning (RL) methods explore the state space locally, which can be ineffective in sparse rewards and long-horizon tasks.
+    %TODO: this needs to be more general:
     Prior reference-free curricula propose goals or starts and expand the explored state space incrementally either from the start state or from the goal state alone, which can be ineffective if the problem is hard or practically impossible to solve from one direction.
     Our method trains the policy on starts and goals in close proximity of both the skill and spatial frontier of the explored state space.
-    Uniquely, our method combines start state and goal conditioned curricula by expanding bidirectionally, leading to more sample efficient and robust learning.
-    We benchmark against state-of-the-art curriculum learning methods on a high dimensional quadrupedal locomotion task with sparse rewards and long horizons, and show that our method outperforms reference-free curricula in sample efficiency and reference-based (imitation learning) methods in robustness.\newline
+    Uniquely, our method combines start-state and goal-conditioned curricula by expanding bidirectionally, leading to more sample-efficient and robust learning.
+    We benchmark against state-of-the-art curriculum learning methods on a high-dimensional quadrupedal locomotion task with sparse rewards and long horizons, and show that our method outperforms reference-free curricula in sample efficiency and reference-based (imitation learning) methods in robustness.\newline
     The project website, videos and code are available at \url{https://juripfammatter.com/html/gccure_demo/gccure_demo.html}
     %TODO: rename website to bver_demo
 \end{abstract}
