@@ -49,25 +49,41 @@ We evaluate the trained policies on (1) perturbations to the yaw-angle used in t
 
 \subsection{Ablations: Forwards / Backwards Symmetry}\label{sec:exp_ablations}
 
+% TODO: 
+% - cut titles in figures
+% - use 3 different colors
+% - make x axes equal
+% - make them smaller and more visible
 \begin{figure}[h]
     \centering
-    \begin{subfigure}[b]{0.45\linewidth}
+    \hfill
+    \begin{subfigure}[b]{0.35\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{img/sb/eval_comparison_72_up.png}
-        \caption{Sample subfigure caption.}
-        \label{fig:eval_comparison_72_up}
+        \includegraphics[width=\linewidth]{img/sb/eval_comparison_41_up_ours.png}
+        \caption{Climb 0.4 m box up.}\label{fig:eval_comparison_41_up_ours}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[b]{0.45\linewidth}
+    \begin{subfigure}[b]{0.35\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{img/sb/eval_comparison_72_down.png}
-        \caption{Sample subfigure caption.}
-        \label{fig:eval_comparison_72_down}
+        \includegraphics[width=\linewidth]{img/sb/eval_comparison_72_up_ours.png}
+        \caption{Climb 0.7 m box up.}\label{fig:eval_comparison_72_up_ours}
     \end{subfigure}
-    \caption{Sample figure caption.}
-    \label{fig:eval_comparison_72}
+    \hfill\strut{}\\
+    \hfill
+    \begin{subfigure}[b]{0.35\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/sb/eval_comparison_41_down_ours.png}
+        \caption{Climb 0.4 m box down.}\label{fig:eval_comparison_41_down_ours}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.35\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/sb/eval_comparison_72_down_ours.png}
+        \caption{Climb 0.7 m box down.}\label{fig:eval_comparison_72_down_ours}
+    \end{subfigure}
+    \hfill\strut{}
+    \caption{Ablations on the box climbing task show that combining forward and backward expansions leads to the best results irrespective of direction (up or down) and box height.}\label{fig:eval_ablations}
 \end{figure}
-% TODO: remove padding in figures etc
 
 % TODO (answers RQ2)
 
@@ -127,3 +143,6 @@ We evaluate the trained policies on (1) perturbations to the yaw-angle used in t
 \end{figure}
 % TODO: add table with learning iterations needed
 % TODO
+
+
+\subsection{Generalization to different domains: manipulation tasks}\label{sec:exp_manipulation}
