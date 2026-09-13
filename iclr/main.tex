@@ -50,14 +50,15 @@ Z\"urich, Switzerland \\
 \maketitle
 
 \begin{abstract}
-    Current reinforcement learning (RL) methods explore the state space locally, which can be ineffective in sparse rewards and long-horizon tasks.
-    %TODO: this needs to be more general:
-    Prior reference-free curricula propose goals or starts and expand the explored state space incrementally either from the start state or from the goal state alone, which can be ineffective if the problem is hard or practically impossible to solve from one direction.
-    Our method trains the policy on starts and goals in close proximity of both the skill and spatial frontier of the explored state space.
-    Uniquely, our method combines start-state and goal-conditioned curricula by expanding bidirectionally, leading to more sample-efficient and robust learning.
-    We benchmark against state-of-the-art curriculum learning methods on a high-dimensional quadrupedal locomotion task with sparse rewards and long horizons, and show that our method outperforms reference-free curricula in sample efficiency and reference-based (imitation learning) methods in robustness.\newline
-    The project website, videos and code are available at \url{https://juripfammatter.com/html/bver_demo/bver.html}
-    %TODO: rename website to bver_demo
+    Goal-conditioned reinforcement learning in sparse-reward, long-horizon tasks is bottlenecked by exploration: from the default start, a policy almost never sees the success signal.
+    Existing automatic curricula are anchored at a single point: they move only one endpoint, proposing goals for a fixed start or start states for a fixed goal, or grow both from one seed region, so the target is only ever approached from one direction.
+    We propose BVER, which borrows from sampling-based motion planning.
+    Two sets of physically valid states are expanded by short random walks, seeded with an RRT-style Voronoi bias toward unexplored task space, and filtered to the frontier of the policy's current ability, while a single goal-conditioned policy trains on both.
+    Unlike prior curricula, BVER grows a start-state frontier outward from the goal and a goal frontier outward from the start simultaneously, and an RRT-Connect-style step connects them, so the target task is approached from both ends at once.
+    Learning from a binary reward alone, with no reference motions, hand-designed curricula, or shaping, BVER solves quadrupedal box climbing under wide start, goal, and yaw variation, is the most sample-efficient demonstration-free method tested, and extends to sparse-reward maze navigation and manipulation tasks.
+
+    The project website, videos and code are available at \url{https://juripfammatter.com/html/bver_demo/bver.html} (replace with anonymous project website for submission).
+    %TODO: create anonymous project website for submission
 \end{abstract}
 
 \input{sections/01_introduction}
