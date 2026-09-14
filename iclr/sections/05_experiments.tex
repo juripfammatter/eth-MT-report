@@ -186,35 +186,73 @@ Similar to the box climbing experiments, we compare using only the forwards expa
 
 \subsection{Real-world terrains}\label{sec:exp_real_world}
 
+To show its practical applicability and answer research question 4, we evaluate BVER on four different real-world terrains with the ANYmal D quadrupedal robot in an identical setup to the box climbing task in Section~\ref{sec:exp_main}. We use the same hyper-parameters and curriculum settings as in the box climbing task, and choose the task space to roughly cover the terrain area. The four terrains in Figure~\ref{fig:scans} can be categorized as follows: (1) climbing a freestanding boulder (figure~\ref{fig:scan_single_boulder}), (2) traversing over a field of small stones (figure~\ref{fig:scan_small_stones}), and (3) ascending a steep rocky slope (Figure~\ref{fig:scan_rocky_scent}), each requiring different locomotion skills. In the \textit{freestanding boulders} and the \textit{small rock field}, the initial distribution is chosen such that no specific path to the goal is favored and the policy has to find its own path to the goal. Table~\ref{tab:real_world_results} shows that similar to box climbing, PPO without a curriculum is unable to solve the task, while BVER is able to find solutions in reasonable time in all four terrains.
+% \renewcommand{\arraystretch}{1.3}
+\begin{table}[h]
+    \centering
+    \caption{Training iterations needed to reach a success rate of 95\% on the four real-world terrains.}\label{tab:real_world_results}
+    \begin{tabularx}{\linewidth}{@{}rcccc@{}}
+        \bf Task    & Freestanding boulder I & Freestanding boulder II & Small stone field & Rocky ascent \\
+        \cmidrule{2-5}
+        Vanilla PPO & -                      & -                       & -                 & -            \\
+        BVER        & -                      & -                       & -                 & -            \\
+    \end{tabularx}
+\end{table}
+% \renewcommand{\arraystretch}{1}
+
+Figure~\ref{fig:scans} shows the explored regions on the \textit{rocky ascent} terrain at different training iterations. The intermediate starts and goals are clustered around their respective roots at the beginning of training, and gradually expand to cover the entire task space as the policies skill improves. Even though the task space (white box) is much larger than the reachable area of the robot, the curriculum is able to find a path to the goal without any prior knowledge of the terrain, showing the effectiveness of the random walks. The even spread of intermediate starts and goals across the task space indicates that the policy has learned to traverse the terrain rather than just solving the target task.
 \begin{figure}[h]
     \centering
     \hfill
-    \begin{subfigure}[t]{0.35\linewidth}
+    \begin{subfigure}[t]{0.48\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{img/scans/ra_150.png}
-        \caption{Iteration 150.}\label{fig:ra_150}
+        \includegraphics[width=0.49\linewidth]{img/scans/ra_150.png}
+        \hfill
+        \includegraphics[width=0.49\linewidth]{img/scans/ra_500.png}
+        \caption{Freestanding boulders.}\label{fig:scan_single_boulder}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[t]{0.35\linewidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/scans/ra_500.png}
-        \caption{Iteration 500.}\label{fig:ra_500}
-    \end{subfigure}
-    \hfill\strut\\
     \hfill
-    \begin{subfigure}[t]{0.35\linewidth}
+    \begin{subfigure}[t]{0.24\linewidth}
         \centering
         \includegraphics[width=\linewidth]{img/scans/ra_1000.png}
-        \caption{Iteration 1000.}\label{fig:ra_1000}
+        \caption{Small stone field.}\label{fig:scan_small_stones}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[t]{0.35\linewidth}
+    \begin{subfigure}[t]{0.24\linewidth}
         \centering
         \includegraphics[width=\linewidth]{img/scans/ra_2000.png}
-        \caption{Iteration 2000.}\label{fig:ra_2000}
+        \caption{Rocky ascent.}\label{fig:scan_rocky_scent}
+    \end{subfigure}
+    \hfill\strut{}\\
+    \centering
+    \hfill
+    \begin{subfigure}[t]{0.24\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/scans/ra_150.png}
+        \caption{Intermediate starts and goals at iteration 150.}\label{fig:ra_150}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.24\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/scans/ra_500.png}
+        \caption{Intermediate starts and goals at iteration 500.}\label{fig:ra_500}
+    \end{subfigure}
+    \hfill
+    \hfill
+    \begin{subfigure}[t]{0.24\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/scans/ra_1000.png}
+        \caption{Intermediate starts and goals at iteration 1000.}\label{fig:ra_1000}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.24\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/scans/ra_2000.png}
+        \caption{Intermediate starts and goals at iteration 2000.}\label{fig:ra_2000}
     \end{subfigure}
     \hfill\strut{}
-    \caption{Samples of the explored regions on the real-world terrain at different training iterations. {\color{blue} Blue} indicates the intermediate goals (forward expansion), {\color{orange} orange} indicates the initial states (backward expansion), and the black box represents the task space.}\label{fig:ra}
+    \caption{Samples of the explored regions on the real-world terrain at different training iterations. {\color{blue} Blue} indicates the intermediate goals (forward expansion), {\color{orange} orange} indicates the initial states (backward expansion), {\color{cyan}cyan} indicates the initial distribution, {\color{teal} green} the target goal, and the black/white box represents the task space.}\label{fig:scans}
 \end{figure}
 % TODO: add table with learning iterations needed
 % TODO
