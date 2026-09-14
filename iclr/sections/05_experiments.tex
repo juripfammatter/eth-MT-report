@@ -14,6 +14,54 @@ We conduct four experiments to answer the following research questions:
 %TODO: review once we have all experiments
 
 The experiments are implemented in IsaacLab~\citep{nvidia2025isaaclabgpuacceleratedsimulation} with the ANYmal D quadrupedal agent and the RSL-RL framework~\citep{schwarke2025rslrllearninglibraryrobotics} for training the policy with PPO~\citep{schulman2017proximal}. The following experiments use standard observation and action spaces which are detailed in Appendix~\ref{sec:appendix_obs_act}. The task space used for our method's random point sampling and goal definition is a 3D box defined in the $(x,y,z)$ space, i.e.\ $\phi(s)$ is the projection to $(x,y,z)$. We found this to be the most effective task space which is both convenient for goal definition while providing a trivial Euclidean distance metric for the nearest neighbor search.
+\begin{figure}[h]
+    \centering
+    \hfill
+    \begin{subfigure}[t]{0.24\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/thumbnails/climb_box_up.png}
+        \caption{Climb box up.}\label{fig:exp_renders_climb_box_up}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.24\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/thumbnails/climb_box_down.png}
+        \caption{Climb box down.}\label{fig:exp_renders_climb_box_down}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.24\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/thumbnails/dtsg.png}
+        \caption{Multiple terrain paths.}\label{fig:exp_renders_dtsg}
+    \end{subfigure}
+    \hfill\strut{}\\
+    \hfill
+    \begin{subfigure}[t]{0.24\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/thumbnails/scan_boulder_small_rocks.png}
+        \caption{Freestanding boulder I.}\label{fig:exp_renders_freestanding_boulder_I}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.24\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/thumbnails/scan_freestanding_boulder.png}
+        \caption{Freestanding boulder II.}\label{fig:exp_renders_freestanding_boulder_II}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.24\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/thumbnails/scan_rocky_ascent.png}
+        \caption{Rocky ascent.}\label{fig:exp_renders_rocky_ascent}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.24\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/thumbnails/scan_small_rocks.png}
+        \caption{Small stone field.}\label{fig:exp_renders_small_rocks}
+    \end{subfigure}
+    \hfill
+    \caption{Experimental setup. {\color{cyan}Cyan} indicates the initial distribution, {\color{teal} green} the target goal, and the black/white box represents the task space.}\label{fig:experiment_renders}
+\end{figure}
 
 In all experiments, the rewards are defined as a combination of the sparse goal reward from Section~\ref{sec:problem_formulation} with $\epsilon=0.25$, i.e.\ the agent has to reach the goal within a certain distance, and a termination penalty for collisions of the base with the terrain.
 
@@ -29,21 +77,21 @@ The results in Figure~\ref{fig:bench} already show a clear distinction between t
 Backplay~\citep{resnick2018backplay} shows the fastest convergence, and its advantage over RSI~\citep{peng2018deepmimic} shows the importance of ordering the task over training time. For the reference-free curricula, our method BVER shows the fastest convergence and highest success rate, outperforming both RC~\citep{florensa2017reverse} and random starts, while even surpassing RSI.
 \begin{figure}[h]
     \centering
-    \begin{subfigure}[b]{0.675\linewidth}
+    \hfill
+    \begin{subfigure}[c]{0.6\linewidth}
         \centering
         \includegraphics[width=\linewidth]{img/sb/eval_comparison_41_up_clean_comp.png}
         \caption{BVER is able to achieve a success rate of over 95\% faster than all other reference-free curricula and even faster than one reference-based method (RSI).}\label{fig:bench}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[b]{0.3\linewidth}
+    \begin{subfigure}[c]{0.3\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{img/sb/robustness_spider.png}
+        \includegraphics[width=\linewidth]{img/sb/robustness_spider_headline_nolegend.png}
         \caption{BVER's start-goal curriculum leads to policies that can solve the task under various start-goal configurations.}\label{fig:robustness}
     \end{subfigure}
+    \hfill\strut{}
     \caption{Sample efficiency and robustness evaluated on a sparse reward box climbing task.}\label{fig:eval_04}
 \end{figure}
-%TODO: replace robustness figure and use the same  colors as the left plot -> move legend to the side
-% make labels more readable
 \paragraph{Robustness:}
 We evaluate the trained policies on (1) perturbations to the yaw-angle used in the initialization, (2) variations in start positions (goal conditioned on the target goal), and (3) variations in goal positions (initialized on the initial distribution). The results in Figure~\ref{fig:robustness} show that BVER's bidirectional curriculum leads to policies that can solve the task under various start-goal configurations, while the other curricula fail to generalize to unseen configurations.
 
@@ -206,55 +254,32 @@ Figure~\ref{fig:scans} shows the explored regions on the \textit{rocky ascent} t
 \begin{figure}[h]
     \centering
     \hfill
-    \begin{subfigure}[t]{0.48\linewidth}
-        \centering
-        \includegraphics[width=0.49\linewidth]{img/scans/ra_150.png}
-        \hfill
-        \includegraphics[width=0.49\linewidth]{img/scans/ra_500.png}
-        \caption{Freestanding boulders.}\label{fig:scan_single_boulder}
-    \end{subfigure}
-    \hfill
-    \hfill
-    \begin{subfigure}[t]{0.24\linewidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/scans/ra_1000.png}
-        \caption{Small stone field.}\label{fig:scan_small_stones}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[t]{0.24\linewidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/scans/ra_2000.png}
-        \caption{Rocky ascent.}\label{fig:scan_rocky_scent}
-    \end{subfigure}
-    \hfill\strut{}\\
-    \centering
-    \hfill
     \begin{subfigure}[t]{0.24\linewidth}
         \centering
         \includegraphics[width=\linewidth]{img/scans/ra_150.png}
-        \caption{Intermediate starts and goals at iteration 150.}\label{fig:ra_150}
+        \caption{Iteration 150.}\label{fig:ra_150}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{0.24\linewidth}
         \centering
         \includegraphics[width=\linewidth]{img/scans/ra_500.png}
-        \caption{Intermediate starts and goals at iteration 500.}\label{fig:ra_500}
+        \caption{Iteration 500.}\label{fig:ra_500}
     \end{subfigure}
     \hfill
     \hfill
     \begin{subfigure}[t]{0.24\linewidth}
         \centering
         \includegraphics[width=\linewidth]{img/scans/ra_1000.png}
-        \caption{Intermediate starts and goals at iteration 1000.}\label{fig:ra_1000}
+        \caption{Iteration 1000.}\label{fig:ra_1000}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{0.24\linewidth}
         \centering
         \includegraphics[width=\linewidth]{img/scans/ra_2000.png}
-        \caption{Intermediate starts and goals at iteration 2000.}\label{fig:ra_2000}
+        \caption{Iteration 2000.}\label{fig:ra_2000}
     \end{subfigure}
     \hfill\strut{}
-    \caption{Samples of the explored regions on the real-world terrain at different training iterations. {\color{blue} Blue} indicates the intermediate goals (forward expansion), {\color{orange} orange} indicates the initial states (backward expansion), {\color{cyan}cyan} indicates the initial distribution, {\color{teal} green} the target goal, and the black/white box represents the task space.}\label{fig:scans}
+    \caption{Samples of the explored regions on the real-world terrain at different training iterations. {\color{blue} Blue} indicates the intermediate goals (forward expansion), {\color{orange} orange} indicates the initial states (backward expansion), {\color{cyan}cyan} indicates the initial distribution, and the black/white box represents the task space.}\label{fig:scans}
 \end{figure}
 % TODO: add table with learning iterations needed
 % TODO
