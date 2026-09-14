@@ -11,9 +11,9 @@ We conduct four experiments to answer the following research questions:
     \item Does our method transfer to real-world terrains and tasks, demonstrating its practical applicability and robustness in real-world scenarios?
 \end{enumerate}
 
-% explain experimental setup
+%TODO: review once we have all experiments
 
-The experiments are implemented in IsaacLab~\cite{d} with the ANYmal D quadrupedal agent and the RSL-RL framework~\cite{d} for training the policy with PPO~\cite{d}. The following four experiments use standard observation and action spaces which are detailed in Appendix~\ref{sec:appendix_obs_act}. The task space used for our method's random point sampling and goal definition is a 3D box defined in the $(x,y,z)$ space, i.e.\ $\phi(s)$ is the projection to $(x,y,z)$. We found this to be the most effective task space which is both convenient for goal definition while providing a trivial Euclidean distance metric for the nearest neighbor search.
+The experiments are implemented in IsaacLab~\citep{nvidia2025isaaclabgpuacceleratedsimulation} with the ANYmal D quadrupedal agent and the RSL-RL framework~\citep{schwarke2025rslrllearninglibraryrobotics} for training the policy with PPO~\citep{schulman2017proximal}. The following experiments use standard observation and action spaces which are detailed in Appendix~\ref{sec:appendix_obs_act}. The task space used for our method's random point sampling and goal definition is a 3D box defined in the $(x,y,z)$ space, i.e.\ $\phi(s)$ is the projection to $(x,y,z)$. We found this to be the most effective task space which is both convenient for goal definition while providing a trivial Euclidean distance metric for the nearest neighbor search.
 
 In all experiments, the rewards are defined as a combination of the sparse goal reward from Section~\ref{sec:problem_formulation} with $\epsilon=0.25$, i.e.\ the agent has to reach the goal within a certain distance, and a termination penalty for collisions of the base with the terrain.
 
@@ -168,15 +168,13 @@ Similar to the box climbing experiments, we compare using only the forwards expa
     \begin{subfigure}[c]{0.45\linewidth}
         \centering
         \includegraphics[width=\linewidth]{img/dt/route_attempts_model_1999_headline.png}
-        \caption{Distribution over routes taken in successful episodes.}
-        \label{fig:eval_comparison_72_up}
+        \caption{Distribution over routes taken in successful episodes.}\label{fig:eval_comparison_72_up}
     \end{subfigure}
     \hfill
     \begin{subfigure}[c]{0.25\linewidth}
         \centering
         \includegraphics[width=\linewidth]{img/dt/trajectories_model_1999_headline.png}
-        \caption{Trajectories of 512 evaluation episodes, colored by route.}
-        \label{fig:eval_comparison_72_down}
+        \caption{Trajectories of 512 evaluation episodes, colored by route.}\label{fig:eval_comparison_72_down}
     \end{subfigure}
     \hfill\strut{}
     \caption{Path diversity on the three-route terrain. PPO without a curriculum collapses onto the ramp, while BVER learns all three routes.}\label{fig:eval_comparison_72}

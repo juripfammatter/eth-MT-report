@@ -1,5 +1,4 @@
-\section{Introduction}
-\label{sec:introduction}
+\section{Introduction}\label{sec:introduction}
 
 Many robotic tasks are posed as reaching a goal: a quadruped that should climb onto a box is rewarded for standing on top of it, not for how it gets there. Under such a sparse reward and a long horizon, a policy started from the initial state distribution essentially never reaches the goal and therefore receives no learning signal~\citep{florensa2017reverse}. Policy gradient methods such as PPO~\citep{schulman2017proximal} perform a local search that improves the policy from the returns of the trajectories it currently generates, and a reward that none of these trajectories collects cannot guide it.
 
