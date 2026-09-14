@@ -159,7 +159,6 @@ Similar to the box climbing experiments, we compare using only the forwards expa
     \caption{Comparison of BVER against no curriculum PPO and random curriculum. Ablations of different components (expansion directions) and hyper-parameters (connect ratio).}\label{fig:eval_maze_ablations}
 \end{figure}
 
-% TODO (answers RQ2)
 
 \subsection{Emergent behavior: path diversity}\label{sec:exp_emergent}
 
@@ -169,21 +168,25 @@ Similar to the box climbing experiments, we compare using only the forwards expa
     \begin{subfigure}[c]{0.45\linewidth}
         \centering
         \includegraphics[width=\linewidth]{img/dt/route_attempts_model_1999_headline.png}
-        \caption{Sample subfigure caption.}
+        \caption{Distribution over routes taken in successful episodes.}
         \label{fig:eval_comparison_72_up}
     \end{subfigure}
     \hfill
     \begin{subfigure}[c]{0.25\linewidth}
         \centering
         \includegraphics[width=\linewidth]{img/dt/trajectories_model_1999_headline.png}
-        \caption{Sample subfigure caption.}
+        \caption{Trajectories of 512 evaluation episodes, colored by route.}
         \label{fig:eval_comparison_72_down}
     \end{subfigure}
     \hfill\strut{}
-    \caption{Sample figure caption.}\label{fig:eval_comparison_72}
+    \caption{Path diversity on the three-route terrain. PPO without a curriculum collapses onto the ramp, while BVER learns all three routes.}\label{fig:eval_comparison_72}
 \end{figure}
+% TODO: add image of terrain
 % TODO: align horizontally
-% TODO (answers RQ3)
+
+To answer research question 3, we design a task with three qualitatively different routes from the initial distribution to the goal: a set of stairs in the center, a field of pillars on one side, and a ramp on the other (Figure~\ref{fig:eval_comparison_72_down}). The initial distribution is chosen to span the full width of the terrain, such that each of the three routes is the closest one for roughly a third of the initial states and no route is favored. After training, we roll out both policies from this broad initial distribution and classify every successful episode by the route it takes.
+
+Figure~\ref{fig:eval_comparison_72_up} shows that PPO without a curriculum collapses onto a single behavior: all successful episodes traverse the ramp, which is the easiest but not necessarily the shortest route, regardless of where the episode starts. Once this route is discovered, exploration of the remaining task space stops, and the policy never learns to climb the stairs or navigate the pillars, even when it is initialized directly in front of them. In contrast, BVER's task-space coverage-driven expansion forces the curriculum to remain active in all regions of the task space, and the resulting policy uses all three routes, choosing the one closest to its initial state. This indicates that state space coverage promotes more diverse learning outcomes: rather than committing to the first solution it finds, the policy acquires the full set of locomotion skills the terrain affords, which makes it less dependent on any single route being available.
 
 \subsection{Real-world terrains}\label{sec:exp_real_world}
 
