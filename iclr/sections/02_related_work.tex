@@ -3,53 +3,20 @@
 % ~0.75-1 page, partitioned into 3-4 labeled thematic blocks.
 % Each block MUST close with an explicit delta sentence:
 %   ``In contrast, our method \ldots'' / ``\ldots is unique to our approach.''
-\paragraph{Automatic Curriculum Learning:}
-Portelas summary paper \citep{portelas2020automatic}:
-\begin{itemize}
-    \item environment/terrain
-          \begin{itemize}
-              \item PLR~\citep{jiang2021prioritized}
-              \item ALP GMM~\citep{portelas2020teacher}
-              \item (ADR)~\citep{akkaya2019solving}
-          \end{itemize}
-    \item rewards
-          \begin{itemize}
-              \item RND~\citep{burda2018exploration}
-          \end{itemize}
-    \item start states
-          \begin{itemize}
-              \item Reverse Curriculum~\citep{florensa2017reverse}
-              \item RSI~\citep{peng2018deepmimic}
-              \item Backplay~\citep{resnick2018backplay}
-          \end{itemize}
-    \item goals (GCRL survey)~\citep{liu2022goal}
-          \begin{itemize}
-              \item GoalGAN~\citep{florensa2018automatic}
-              \item HGG~\citep{ren2019exploration}
-              \item OUTPACE~\citep{cho2023outcome}
-          \end{itemize}
-\end{itemize}
-% ... closing delta sentence.
+\paragraph{Automatic curriculum learning:}
+Automatic curriculum learning (ACL) adapts the sequence of training tasks to the capabilities of the learner during training~\citep{narvekar2020curriculum, portelas2020automatic}. \citet{portelas2020automatic} sort ACL methods for data collection by what they control: the initial state, the reward function, the goal, the environment, or the opponent. Environment curricula sample the parameters of a procedural generator by absolute learning progress~\citep{portelas2020teacher}, replay previously seen levels prioritized by the magnitude of their value loss~\citep{jiang2021prioritized}, or widen the ranges of domain randomization once performance at their boundary exceeds a threshold~\citep{akkaya2019solving}; all of them assume an environment that can be parameterized or regenerated. Reward curricula such as RND~\citep{burda2018exploration} add as intrinsic reward the error of a network that predicts the features of a fixed random network, which by its authors' own account handles local exploration but not global exploration over long horizons. BVER controls neither environment nor reward and changes only where an episode starts and which goal it is given.
 
-\paragraph{Sampling Based Planning:}
-% make sure this fits in really well as its a bit out of distribution
+\paragraph{Start-state and goal curricula:}
+Reverse curriculum generation~\citep[RC;][]{florensa2017reverse} grows start states outward from a given goal state with short rollouts of random actions and keeps those from which the current policy reaches the goal sometimes but not always; it needs no demonstrations, only a simulator that resets to arbitrary states and one goal state. BaRC~\citep{ivanovic2019barc} replaces the random rollouts with backward reachable sets computed from an approximate dynamics model, so that the frontier grows in every direction the dynamics allow. Reference state initialization~\citep[RSI;][]{peng2018deepmimic} samples the start state uniformly from a reference motion, Backplay~\citep{resnick2018backplay} moves a window of start states backward along a single demonstration on a fixed schedule, and RFCL~\citep{tao2024reverse} runs a reverse curriculum per demonstration and then prioritizes initial states of the task by success rate; all three vary only the start state and rely on demonstrations. Goal curricula generate goals for the task's own initial state distribution: GoalGAN~\citep{florensa2018automatic} trains a generator to propose goals of intermediate difficulty, HGG~\citep{ren2019exploration} selects achieved states from the replay buffer by their Wasserstein distance to the target task distribution and their value, and OUTPACE~\citep{cho2023outcome} selects them by temporal distance from the initial distribution, uncertainty, and progress toward given outcome examples. In contrast, BVER grows intermediate starts and intermediate goals at the same time, biases both toward unexplored task space, and connects the two sets, which, unlike RC and BaRC, drives the frontiers toward the target task. Combining start-state generation with goal generation, by analogy to RRT-Connect, is what \citet{florensa2017reverse} proposed as future work.
+
+\paragraph{Sampling-based planning:}
+A rapidly-exploring random tree~\citep{lavalle2001randomized} extends the vertex nearest to a random sample of the space; since a vertex is selected with probability proportional to the area of its Voronoi region, the tree is biased to explore rapidly~\citep{kuffner2000rrt}. RRT-Connect~\citep{kuffner2000rrt} grows two trees from the start and the goal and tries to connect them. BVER seeds its random walks with the same Voronoi bias and connect step, growing a curriculum rather than a path.
 
 \paragraph{Quadrupedal Locomotion:}
-% ... closing delta sentence.
-% \begin{itemize}
-%     \item dense reward and parametric terrain curriculum
-%           \begin{itemize}
-%               \item game inspired curriculum~\citep{rudin2022learning}
-%               \item particle filter based parametric terrain curriculum~\citep{lee2020learning}
-%           \end{itemize}
-%     \item use of RSI: OPT-mimic~\citep{fuchioka2023opt}
-%     \item hand designed curriculum for jumping~\citep{atanassov2024curriculum}
-%     \item RND~\citep{schwarke2023curiosity}
-% \end{itemize}
 
 Current state-of-the-art quadrupedal locomotion methods do not train on sparse rewards, long-horizon tasks and often rely on reference motions or hand-designed curricula.
 For example, \citet{rudin2022learning} utilize a game-inspired terrain curriculum with dense rewards.\ \citet{lee2020learning} replace the game-inspired curriculum with an adaptive particle filter based parametric terrain curriculum.
 \citet{fuchioka2023opt} use trajectory optimization to find a solution and then train with RSI~\citep{peng2018deepmimic} as an initialization curriculum.
-\citet{atanassov2024curriculum} hand-design a three-stage curriculum for jumping onto a box. In the first step, they use RSI~\citep{peng2018deepmimic} to learn jumping motions, and conclude that RSI is required to learn the jumping task.
+\citet{atanassov2024curriculum} hand-design a three-stage curriculum for jumping and initialize the first stage at random heights and upward velocities, a form of RSI without a reference trajectory, which they find necessary to learn jumping in place.
 \citet{schwarke2023curiosity} learn a quadrupedal loco-manipulation task on sparse rewards by extending RND~\citep{burda2018exploration} with a curiosity state.
 Our method differs from these as it learns on sparse rewards directly, without reference motions, hand-designed curricula and without additional rewards.
