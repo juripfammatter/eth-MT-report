@@ -1,19 +1,21 @@
 %!LW recipe=latexmk (latexmkrc)
 %==============================================================================
-% ICLR 2026 conference paper
-% Based on the official ICLR 2026 template (see reference/ for the unmodified
+% ICLR 2027 conference paper
+% Based on the official ICLR 2027 template (see reference/ for the unmodified
 % formatting instructions). Build: latexmk main.tex   (output -> ../build-iclr)
 %
-% Conference requirements (ICLR 2026):
+% Conference requirements (ICLR 2027):
+%   - Deadlines (AoE): abstract Sep 18, 2026; full paper Sep 25, 2026.
 %   - Main text: max 9 pages at submission (10 pages for rebuttal/camera-ready).
-%     References and appendices do not count toward the limit.
+%     References, appendices and the statements below do not count.
+%   - The "AI use statement" section is REQUIRED (see AI Policy for Authors).
 %   - Double-blind: keep \iclrfinalcopy commented out for submission; the style
 %     file then replaces the author block with "Anonymous authors" automatically.
 %   - Citations via natbib: \citet{} in-sentence, \citep{} in parentheses.
 %==============================================================================
 
 \documentclass{article} % For LaTeX2e
-\usepackage{iclr2026_conference,times}
+\usepackage{iclr2027_conference,times}
 
 % Optional math commands from https://github.com/goodfeli/dlbook_notation.
 \input{math_commands.tex}
@@ -36,15 +38,15 @@
 % Authors must not appear in the submitted version. They are hidden
 % as long as the \iclrfinalcopy macro remains commented out below.
 % Non-anonymous submissions will be rejected without review.
-\author{Juri Pfammatter, Victor Klemm, Kaixian Qu, Clemens Schwarke \& Marco Hutter \\
+\author{Juri Pfammatter, Kaixian Qu, Clemens Schwarke, Victor Klemm \& Marco Hutter \\
 Robotic Systems Lab\\
 ETH Z\"urich\\
 Z\"urich, Switzerland \\
 \texttt{jpfammatter@ethz.ch}\\
-\texttt{\{vklemm, kaixqu, clemens, mahutter\}@leggedrobotics.com} \\
+\texttt{\{kaixqu, clemens, vklemm, mahutter\}@leggedrobotics.com} \\
 }
 
-\iclrfinalcopy{} % Uncomment for camera-ready version, but NOT for submission.
+%\iclrfinalcopy % Uncomment for camera-ready version, but NOT for submission.
 
 \begin{document}
 
@@ -65,8 +67,23 @@ Z\"urich, Switzerland \\
 \input{sections/05_experiments}
 \input{sections/06_conclusion}
 
-\subsubsection*{Reproducibility statement}
-% Optional; does not count toward the page limit.
+\subsection*{AI use statement}
+% REQUIRED for ICLR 2027; does not count toward the page limit (max 1 page).
+% TODO cross-check against the ICLR 2027 AI Policy for Authors before submission.
+In this work, we did not use generative AI for any task requiring disclosure.
+However, we used generative AI tools
+for creating scientific figures from non-AI-generated data, creating and
+editing software code, and editing the paper text to improve readability
+(proofreading of grammar and style). We have reviewed all AI-assisted work:
+generated figures were checked against the underlying data, AI-assisted code
+was verified and tested for correctness by the authors, and all suggested text
+edits were reviewed and accepted by the authors.
+% We take responsibility for the final
+% content of this work, including text, claims or artifacts produced with the aid
+% of generative AI.
+
+\subsection*{Reproducibility statement}
+% Recommended; does not count toward the page limit.
 % TODO Describe the efforts made to ensure reproducibility (code, seeds,
 % hyperparameters, hardware), or remove this block.
 Experiments can be reproduced with the code provided in the project website. The code includes all hyperparameters, random seeds, and instructions to run the experiments. We run all experiments on a single NVIDIA RTX 4090 GPU with six different random seeds each.
@@ -81,7 +98,7 @@ Experiments can be reproduced with the code provided in the project website. The
 % TODO Funding acknowledgements go here (not in the author footnote).
 
 \bibliography{references}
-\bibliographystyle{iclr2026_conference}
+\bibliographystyle{iclr2027_conference}
 
 \appendix
 \input{sections/99_appendix}

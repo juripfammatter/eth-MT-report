@@ -4,7 +4,7 @@ LaTeX source for the Master Thesis report on Learning-based navigation (ETH Zuri
 
 - `source/` — the report itself
 - `template/` — the unmodified ETH RSL student-project template
-- `iclr/` — ICLR 2026 conference-format version of the report (official template; unmodified formatting instructions in `iclr/reference/`)
+- `iclr/` — ICLR 2027 conference-format version of the report (official template; unmodified formatting instructions in `iclr/reference/`)
 
 ## Build
 
@@ -25,9 +25,9 @@ for each. To export them as individual, tightly cropped PDFs and SVGs into
 ./scripts/export-algorithms.sh
 ```
 
-### ICLR 2026 paper
+### ICLR 2027 paper
 
-The `iclr/` folder holds a separate paper in the official ICLR 2026 format
+The `iclr/` folder holds a separate paper in the official ICLR 2027 format
 (pdfLaTeX, per the conference template). Its `.latexmkrc` routes output to
 `build-iclr/`:
 

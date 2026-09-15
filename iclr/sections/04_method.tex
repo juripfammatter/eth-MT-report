@@ -48,12 +48,6 @@ Both the exploration and exploitation steps are repeated until the policy is abl
 
 
 \subsection{Bidirectional Expansion}
-
-\paragraph{Forwards expansion:}
-The backwards expansion mechanism described in the previous section can be applied to the forwards expansion by substituting the start state with the goal state. The goal-conditioned policy is trained on initial states sampled from the initial distribution $\rho_0$ and goals sampled from the spatial frontier of the explored state space, i.e., $(s_0 \sim \rho_0,\, g_i)$ rather than $(s_i,\, g^\star)$. The exploration and exploitation steps are then identical, with the minor difference that the random walks are seeded in states that can be reached rather than states from which the goal can be reached.
-
-\paragraph{Bidirectional expansion:} Combining the two expansion mechanisms, we train one shared goal-conditioned policy on both $(s_0 \sim \rho_0,\, g_i)$ and $(s_i,\, g^\star)$, with the training budget split evenly between the two expansions ($\beta = \tfrac{1}{2}$ in Eq.~(\ref{eq:bidirectional})). This leads to a diverse, incrementally expanding curriculum that covers the reachable task space from two directions. As a result, the policy is trained to reach the target goal from a wide range of start states, and to reach a wide range of goals from the initial distribution, leading to more robust policies.
-
 \begin{wrapfigure}{r}{0.3\linewidth}
     \centering
     % \vspace{-\baselineskip} % add again if formatting changes
@@ -62,6 +56,12 @@ The backwards expansion mechanism described in the previous section can be appli
         expansion set by sampling from the other mixed training set rather than
         random samples from the task space.}\label{fig:connect}
 \end{wrapfigure}
+\paragraph{Forwards expansion:}
+The backwards expansion mechanism described in the previous section can be applied to the forwards expansion by substituting the start state with the goal state. The goal-conditioned policy is trained on initial states sampled from the initial distribution $\rho_0$ and goals sampled from the spatial frontier of the explored state space, i.e., $(s_0 \sim \rho_0,\, g_i)$ rather than $(s_i,\, g^\star)$. The exploration and exploitation steps are then identical, with the minor difference that the random walks are seeded in states that can be reached rather than states from which the goal can be reached.
+
+\paragraph{Bidirectional expansion:} Combining the two expansion mechanisms, we train one shared goal-conditioned policy on both $(s_0 \sim \rho_0,\, g_i)$ and $(s_i,\, g^\star)$, with the training budget split evenly between the two expansions ($\beta = \tfrac{1}{2}$ in Eq.~(\ref{eq:bidirectional})). This leads to a diverse, incrementally expanding curriculum that covers the reachable task space from two directions. As a result, the policy is trained to reach the target goal from a wide range of start states, and to reach a wide range of goals from the initial distribution, leading to more robust policies.
+
+
 \paragraph{Connecting the two frontiers:} In addition to the bidirectional expansion, we can also connect the two frontiers by replacing the random samples from $\mathcal{T}$ in step (1) of the spatial expansion with samples from the other frontier (Figure~\ref{fig:connect}). For example, when expanding the forwards frontier, we sample states from the mixed training set of the backwards expansion and then find their nearest neighbors in the mixed training set of the forwards expansion. As a result, the seeds of the forwards random walks lie on the side of the forwards set that faces the backwards set, and the intermediate goals grow toward the target goal $g^\star$. Symmetrically, the seeds of the backwards random walks face the forwards set, and the intermediate starts grow toward the initial distribution $\rho_0$.
 
 % \begin{figure}[h]\label{fig:method}
