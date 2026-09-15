@@ -7,5 +7,32 @@
     \caption{Overview of BVER.}\label{fig:method}
 \end{figure}
 
+\subsection{Algorithms}\label{sec:appendix_algorithms}
+
+Algorithms~\ref{alg:training_loop}--\ref{alg:mix} summarize BVER in pseudocode.
+Each direction keeps the same three sets of states: a frontier buffer $F$ holding the
+states whose rollout return falls between $R_{\min}$ and $R_{\max}$, a solved buffer $S$
+holding the states with a return above $R_{\max}$, and the mixed set $\mathcal{I}$ from
+which the exploitation rollouts are drawn. The superscripts $\text{fwd}$ and
+$\text{bwd}$ distinguish the forwards from the backwards expansion; states in the
+forwards buffers enter the rollouts as intermediate goals through $\phi$, states in the
+backwards buffers as intermediate start states.
+Algorithm~\ref{alg:training_loop} is the bidirectional training loop, which collects
+exploration rollouts on the random walk candidates and exploitation rollouts on the
+mixed set in every iteration and updates a single goal-conditioned policy on both.
+Algorithm~\ref{alg:random_walk} expands a frontier by simulating an action-noise random
+walk from the nearest neighbor of a sampled task space point,
+Algorithm~\ref{alg:threshold} sorts the collected rollouts into $F$ and $S$ by their
+return, and Algorithm~\ref{alg:mix} rebuilds $\mathcal{I}$ from the two buffers,
+replaying a fraction $\nu$ of solved states.
+
+\input{sections/algorithms/alg_training_loop}
+
+\input{sections/algorithms/alg_random_walk}
+
+\input{sections/algorithms/alg_threshold}
+
+\input{sections/algorithms/alg_mix}
+
 \subsection{Simulation setup}\label{sec:appendix_obs_act}
 % TODO: observation and action spaces, simulation and PPO hyperparameters.

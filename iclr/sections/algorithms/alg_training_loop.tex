@@ -1,0 +1,36 @@
+\begin{algorithm}[H]
+\caption{BVER: bidirectional curriculum training loop}\label{alg:training_loop}
+\small
+\begin{algorithmic}[1]
+\Require{\
+\newline  initial state distribution $\rho_0$, target goal $g^\star$ with goal state $s^{g}$, task space $\mathcal{T}$, goal-conditioned policy $\pi$,
+\newline $N_{\text{exploit}}, N_{\text{explore}}$ (both even), $R_{\min}, R_{\max}$, replay ratio $\nu$, connect ratio $p_{\text{connect}}$,
+\newline buffer max sizes $M_F, M_S, M_C$, mixed set size $M_I$, number of subsamples $N_s$,
+\newline random walk horizon $T_B$, action noise covariance $\Sigma$}
+\Statex{}
+\State{\textbf{Initialize}
+\newline $\mathcal{I}^{\text{fwd}} \gets \{s_0\}, \; s_0 \sim \rho_0$; \quad $\mathcal{I}^{\text{bwd}} \gets \{s^{g}\}$;
+\newline $C^{\text{fwd}}, C^{\text{bwd}}$ empty with max size $M_C$;
+\newline $F^{\text{fwd}}, F^{\text{bwd}}$ empty with max size $M_F$;
+\newline $S^{\text{fwd}}, S^{\text{bwd}}$ empty with max size $M_S$}
+\Statex{}
+\For{$e = 1, \ldots{}, E$}
+    \State{} $C^{\text{fwd}} \gets C^{\text{fwd}} \cup \Call{RandomWalk}{\mathcal{I}^{\text{fwd}}, \mathcal{T}, S^{\text{bwd}}, p_{\text{connect}}, \Sigma, N_s, T_B}$ \Comment{frontier $\to$ candidates}
+    \State{} $C^{\text{bwd}} \gets C^{\text{bwd}} \cup \Call{RandomWalk}{\mathcal{I}^{\text{bwd}}, \mathcal{T}, S^{\text{fwd}}, p_{\text{connect}}, \Sigma, N_s, T_B}$
+    \Statex{}
+    \State{} $D^{\text{fwd}}_{\text{explore}} \gets \Call{Rollout}{\pi, \rho_0, \phi(C^{\text{fwd}}), N_{\text{explore}}/2}$ \Comment{explore: random walk candidates}
+    \State{} $D^{\text{bwd}}_{\text{explore}} \gets \Call{Rollout}{\pi, C^{\text{bwd}}, g^\star, N_{\text{explore}}/2}$
+    \Statex{}
+    \State{} $D^{\text{fwd}}_{\text{exploit}} \gets \Call{Rollout}{\pi, \rho_0, \phi(\mathcal{I}^{\text{fwd}}), N_{\text{exploit}}/2}$ \Comment{exploit: mixed set}
+    \State{} $D^{\text{bwd}}_{\text{exploit}} \gets \Call{Rollout}{\pi, \mathcal{I}^{\text{bwd}}, g^\star, N_{\text{exploit}}/2}$
+    \Statex{}
+    \State{} $\pi \gets \Call{PPO}{\pi, \; D^{\text{fwd}}_{\text{explore}} \cup D^{\text{bwd}}_{\text{explore}} \cup D^{\text{fwd}}_{\text{exploit}} \cup D^{\text{bwd}}_{\text{exploit}}}$ \Comment{one shared policy update}
+    \Statex{}
+    \State{} $F^{\text{fwd}}, S^{\text{fwd}} \gets \Call{Threshold}{D^{\text{fwd}}_{\text{exploit}}, D^{\text{fwd}}_{\text{explore}}, R_{\min}, R_{\max}, F^{\text{fwd}}, S^{\text{fwd}}, \text{fwd}}$
+    \State{} $F^{\text{bwd}}, S^{\text{bwd}} \gets \Call{Threshold}{D^{\text{bwd}}_{\text{exploit}}, D^{\text{bwd}}_{\text{explore}}, R_{\min}, R_{\max}, F^{\text{bwd}}, S^{\text{bwd}}, \text{bwd}}$
+    \Statex{}
+    \State{} $\mathcal{I}^{\text{fwd}} \gets \Call{Mix}{F^{\text{fwd}}, S^{\text{fwd}}, \nu, M_I}$ \Comment{update mixed sets}
+    \State{} $\mathcal{I}^{\text{bwd}} \gets \Call{Mix}{F^{\text{bwd}}, S^{\text{bwd}}, \nu, M_I}$
+\EndFor{}
+\end{algorithmic}
+\end{algorithm}

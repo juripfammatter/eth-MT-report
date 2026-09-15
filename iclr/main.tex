@@ -23,14 +23,18 @@
 \usepackage{hyperref}
 \usepackage{url}
 \usepackage{graphicx}
+\usepackage{xcolor}
 \usepackage{subcaption}
 \graphicspath{{img/}}
 \usepackage{wrapfig}
 \usepackage{booktabs, tabularx}
 
-% For the algorithm box in the method section:
-%\usepackage{algorithm}
-%\usepackage{algorithmic}
+% Algorithm boxes (pseudocode in the appendix, Sec.~\ref{sec:appendix_algorithms}):
+\usepackage{float}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+% Comments set in teal with a triangle marker, as in the thesis.
+\algrenewcommand{\algorithmiccomment}[1]{\hfill{\color{teal}$\triangleright$ #1}}
 
 % TODO Set the paper title
 \title{BVER: Bidirectional incremental Voronoi-biased Exploration curriculum for Reinforcement learning}
