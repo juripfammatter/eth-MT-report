@@ -34,6 +34,12 @@ The experiments are implemented in Isaac Lab~\citep{nvidia2025isaaclabgpuacceler
         \includegraphics[width=\linewidth]{img/thumbnails/dtsg.png}
         \caption{Multiple terrain paths.}\label{fig:exp_renders_dtsg}
     \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.24\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/thumbnails/hanoi_p12.png}
+        \caption{Tower of Hanoi.}\label{fig:exp_renders_hanoi_p12}
+    \end{subfigure}
     \hfill\strut{}\\
     \hfill
     \begin{subfigure}[t]{0.24\linewidth}
@@ -60,7 +66,7 @@ The experiments are implemented in Isaac Lab~\citep{nvidia2025isaaclabgpuacceler
         \caption{Small stone field.}\label{fig:exp_renders_small_rocks}
     \end{subfigure}
     \hfill
-    \caption{Experimental setup. {\color{cyan}Cyan} indicates the initial distribution, {\color{teal} green} the target goal, and the black/white box represents the task space.}\label{fig:experiment_renders}
+    \caption{Experimental setup. {\color{cyan}Cyan} indicates the initial distribution, {\color{teal} green} the target goal, and the white box represents the task space.}\label{fig:experiment_renders}
 \end{figure}
 
 In all experiments, the rewards are defined as a combination of the sparse goal reward from Section~\ref{sec:problem_formulation} with $\epsilon = 0.25\,\mathrm{m}$, i.e., the agent has to reach the goal within a certain distance, and a termination penalty for collisions of the base with the terrain.
@@ -269,3 +275,12 @@ Figure~\ref{fig:scans} shows the explored regions on the \textit{rocky ascent} t
     \caption{Samples of the explored regions on the \textit{rocky ascent} terrain at different training iterations. {\color{blue} Blue} indicates the intermediate goals (forwards expansion), {\color{orange} orange} indicates the intermediate starts (backwards expansion), {\color{cyan}cyan} indicates the initial distribution, and the black/white box represents the task space.}\label{fig:scans}
 \end{figure}
 \subsection{Generalization to Different Domains: Manipulation Tasks}\label{sec:exp_manipulation}
+
+todo
+\begin{wrapfigure}{r}{0.24\linewidth}
+    \centering
+    \vspace{-\baselineskip}
+    \includegraphics[width=\linewidth]{img/manipulation/eval_comparison_hanoi_bench.png}
+    \includegraphics[width=\linewidth]{img/manipulation/eval_comparison_hanoi_abl_dir.png}
+    \caption{Top row shows the benchmark results, and the bottom row shows the ablation results.}\label{fig:hanoi_p12}
+\end{wrapfigure}
