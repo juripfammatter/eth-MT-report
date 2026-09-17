@@ -1,7 +1,7 @@
 \section{Appendix}\label{sec:appendix}
 
 % Appendices do not count toward the page limit.
-\begin{figure}[h]
+\begin{figure}[!ht]
     \centering
     \includegraphics[width=\linewidth]{img/graphics/scheme_full.pdf}
     \caption{Overview of BVER.}\label{fig:method}
@@ -33,6 +33,75 @@ replaying a fraction $\nu$ of solved states.
 \input{sections/algorithms/alg_threshold}
 
 \input{sections/algorithms/alg_mix}
+% In all experiments, the rewards are defined as a combination of the sparse goal reward from Section~\ref{sec:problem_formulation} with $\epsilon = 0.25\,\mathrm{m}$, i.e., the agent has to reach the goal within a certain distance, and a termination penalty for collisions of the base with the terrain.
 
-\subsection{Simulation setup}\label{sec:appendix_obs_act}
-% TODO: observation and action spaces, simulation and PPO hyperparameters.
+% In the \textit{multiple terrain paths} experiments, a potential-based reward shaping term~\citep{ng1999policy}, which leaves the set of optimal policies of the underlying GA-MDP unchanged, is added to provide a reward signal strong enough for the no-curriculum PPO baseline to find solutions:
+% \begin{equation*}
+%     r_{\mathrm{progress}}(s_t, s_{t+1}, g) = \lVert \phi(s_t) - g \rVert - \gamma \lVert \phi(s_{t+1}) - g \rVert
+% \end{equation*}
+
+\subsection{Experiment setup}\label{sec:appendix_obs_act}
+The following tables use these abbreviations: Point-Maze (PM), Climb Up (CI), Climb Down (CD), Multiple Terrains Path (MTP), Freestanding Boulder I (FB I), Freestanding Boulder II (FB II), Rocky Ascent (RA), Small Stone Field (SSF), and Tower of Hanoi (TH).
+
+\paragraph{Point-Maze (PM).}
+The agent is a velocity-controlled point mass in a walled grid with \SI{4}{\meter} cells, controlled at \SI{20}{\hertz}. The observation is six-dimensional and noise-free: the planar position, the planar velocity and the vector to the goal; actor and critic receive the same input. The action is a two-dimensional planar velocity command. The reward consists of a single sparse term: +1 if the agent comes within \SI{1}{\meter} of the goal. The episode terminates after a fixed horizon.
+
+\paragraph{Climb Up/Down (CI, CD) and scans (FB I, FB II, RA, SSF).}
+These tasks use ANYmal D with a \SI{50}{\hertz} joint-position controller; the 12-dimensional action is an offset from the default joint configuration. The policy observes the base position and angle, the base linear and angular velocity, the projected gravity, the three-dimensional goal position in the base frame, the joint positions and velocities, the previous action and a height scan over a \SI{2}{\meter}~$\times$~\SI{1}{\meter} grid at \SI{0.1}{\meter} resolution. The policy observations are corrupted with uniform noise; the critic receives the same terms without noise. The reward is purely sparse: a term of +1 if the base is within \SI{0.25}{\meter} of the goal and a termination penalty for illegal body contact or a bad base orientation. No shaping terms are used. Episodes last \SI{4}{\second} on the climb tasks, \SI{12}{\second} on RA and \SI{10}{\second} on the other scans.
+
+\paragraph{Multiple Terrains Path (MTP).}
+MTP shares the robot, the action space and the observations, including the base position and yaw, with the tasks above.  Unlike the climb and scan tasks, the reward is not purely sparse. In addition to the same sparse goal-occupancy term, a potential-based reward shaping term~\citep{ng1999policy}, which leaves the set of optimal policies of the underlying GA-MDP unchanged, is added to provide a reward signal strong enough for the no-curriculum PPO baseline to find solutions:
+\begin{equation*}
+    r_{\mathrm{progress}}(s_t, s_{t+1}, g) = \lVert \phi(s_t) - g \rVert - \gamma \lVert \phi(s_{t+1}) - g \rVert
+\end{equation*}
+BVER's reward band is evaluated on the sparse term only. Episodes last \SI{10}{\second}.
+
+\paragraph{Tower of Hanoi (TH).}
+A Franka Panda with stiff joints holds a ring that is rigidly attached to its hand and has to move it from the bottom of one peg to the bottom of another; control runs at \SI{30}{\hertz}. The 27-dimensional, consists of the seven arm joint positions and velocities, the ring center, the vector from the ring center to the goal and the previous action. The seven-dimensional action is a relative joint-position target, so a zero action holds the current pose. The reward is the same as in the point mazes, measured in three dimensions on the ring center with a tolerance of \SI{3}{\centi\meter}.
+
+
+\begin{table}[!ht]
+    \centering
+    \caption{PPO hyperparameters for all experiments.}\label{tab:ppo_hyperparameters}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabularx}{\linewidth}{@{}p{0.25\linewidth}ccc@{}}
+                                & \multicolumn{3}{c}{Experiments}                                                        \\
+        \cmidrule(lr){2-4}
+        Hyperparameters         & PM                              & CI, CD, MTP, FB I, FB II, RA, SSF & TH               \\
+        \cmidrule(lr){1-4}
+        MLP hidden dimensions   & $[128, 64, 16]$                 & $[512, 256, 128]$                 & $[256, 128, 64]$ \\
+        Activation function     & \textit{ELU}                    & \textit{ELU}                      & \textit{ELU}     \\
+        Value loss coefficient  & $1.0$                           & $1.0$                             & $1.0$            \\
+        Clip parameter          & $0.2$                           & $0.2$                             & $0.2$            \\
+        Entropy coefficient     & $0.01$                          & $0.0025$                          & $0.002$          \\
+        Learning rate           & $5\cdot 10^{-4}$                & $5\cdot 10^{-4}$                  & $5\cdot 10^{-4}$ \\
+        Discount factor$\gamma$ & $0.99$                          & $0.99$                            & $0.99$           \\
+        $\lambda$ (GAE)         & $0.95$                          & $0.95$                            & $0.95$           \\
+        Desired KL divergence   & $0.01$                          & $0.01$                            & $0.01$           \\
+    \end{tabularx}
+    \renewcommand{\arraystretch}{1}
+\end{table}
+
+\begin{table}[!ht]
+    \centering
+    \caption{BVER hyperparameters for all experiments.}\label{tab:ppo_hyperparameters}
+    \begin{tabularx}{\linewidth}{@{}p{0.22\linewidth}ccccccc@{}}
+                                         & \multicolumn{7}{c}{Experiments}                                                                                                                 \\
+        \cmidrule(lr){2-8}
+        Hyperparameters                  & PM-U                            & PM-N            & PM-large        & CI, CD          & MTP             & FB I, FB II, RA, SSF & TH             \\
+        \cmidrule(lr){1-8}
+        Env split $N_{\mathrm{exploit}}$ & $0$                             & $0$             & $0$             & $2048$          & $2048$          & $1024$               & $0$            \\
+        Env split $N_{\mathrm{explore}}$ & $2048$                          & $2048$          & $2048$          & $4096$          & $4096$          & $2048$               & $2048$         \\
+        $R_{\min}$                       & $0.1$                           & $0.1$           & $0.1$           & $0.05$          & $0.05$          & $0.05$               & $0.1$          \\
+        $R_{\max}$                       & $0.85$                          & $0.85$          & $0.85$          & $0.2$           & $0.2$           & $0.2$                & $0.85$         \\
+        Replay ratio $\nu$               & $0.2$                           & $0.2$           & $0.2$           & $0.0$           & $0.05$          & $0.05$               & $0.1$          \\
+        $p_{\mathrm{connect}}$           & $0.0$                           & $0.5$           & $0.5$           & $0.5$           & $0.0$           & $0.0$                & $0.5$          \\
+        Buffer size $M_F$                & $10^3$                          & $10^3$          & $10^3$          & $2\cdot10^3$    & $2\cdot10^3$    & $2\cdot10^3$         & $10^3$         \\
+        Buffer size $M_S$                & $10^3$                          & $10^3$          & $10^3$          & $10^4$          & $10^4$          & $10^4$               & $10^3$         \\
+        Buffer size $M_C$                & $500$                           & $500$           & $500$           & $5\cdot10^3$    & $5\cdot10^3$    & $5\cdot10^3$         & $500$          \\
+        Buffer size $M_I$                & $10^3$                          & $10^3$          & $10^3$          & $2\cdot10^3$    & $2\cdot10^3$    & $2\cdot10^3$         & $10^3$         \\
+        Subsample steps $N_S$            & $4$                             & $4$             & $4$             & $4$             & $4$             & $4$                  & $4$            \\
+        Brownian horizon $T_B$           & $80$                            & $200$           & $80$            & $64$            & $128$           & $128$                & $10$           \\
+        Action noise $\Sigma$            & $10\cdot\bf{I}$                 & $10\cdot\bf{I}$ & $10\cdot\bf{I}$ & $10\cdot\bf{I}$ & $10\cdot\bf{I}$ & $10\cdot\bf{I}$      & $3\cdot\bf{I}$ \\
+    \end{tabularx}
+\end{table}

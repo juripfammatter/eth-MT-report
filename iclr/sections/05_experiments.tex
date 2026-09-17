@@ -69,12 +69,7 @@ The experiments are implemented in Isaac Lab~\citep{nvidia2025isaaclabgpuacceler
     \caption{Experimental setup. {\color{cyan}Cyan} indicates the initial distribution, {\color{teal} green} the target goal, and the white box represents the task space.}\label{fig:experiment_renders}
 \end{figure}
 
-In all experiments, the rewards are defined as a combination of the sparse goal reward from Section~\ref{sec:problem_formulation} with $\epsilon = 0.25\,\mathrm{m}$, i.e., the agent has to reach the goal within a certain distance, and a termination penalty for collisions of the base with the terrain.
-
-In the \textit{multiple terrain paths} experiments, a potential-based reward shaping term~\citep{ng1999policy}, which leaves the set of optimal policies of the underlying GA-MDP unchanged, is added to provide a reward signal strong enough for the no-curriculum PPO baseline to find solutions:
-\begin{equation*}
-    r_{\mathrm{progress}}(s_t, s_{t+1}, g) = \lVert \phi(s_t) - g \rVert - \gamma \lVert \phi(s_{t+1}) - g \rVert
-\end{equation*}
+%TODO: add sentence about the experiment setup
 
 \subsection{Sample Efficiency and Robustness}\label{sec:exp_main}
 To evaluate sample efficiency and robustness, we compare our method BVER against state-of-the-art curriculum learning methods on a sparse-reward box climbing task. The task is defined as a goal-conditioned locomotion task where the agent has to reach a target goal position on top of a box from an initial distribution of start positions in front of the box. The task is challenging due to the sparse reward signal and the long horizon required to reach the goal.
