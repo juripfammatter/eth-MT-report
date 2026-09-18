@@ -116,7 +116,7 @@ We evaluate the policies trained on box climbing under (1) perturbations to the 
     \hfill
     \begin{subfigure}[c]{0.24\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{img/manipulation/eval_comparison_hanoi_bench.png}
+        \includegraphics[width=\linewidth]{img/manipulation/eval_comparison_hanoi_bench.pdf}
         \caption{Tower of Hanoi.}\label{fig:hanoi_bench}
     \end{subfigure}
     \hfill\strut{}\\
@@ -201,7 +201,7 @@ Figure~\ref{fig:scans} shows the explored regions on the \textit{rocky ascent} t
 To answer research question 4, we use the box climbing task and the three point-mass mazes as our testbed, and additionally verify the effect of the expansion direction on the Tower of Hanoi task.
 
 \paragraph{Expansion direction:}
-We evaluate the effect of the bidirectional expansion by comparing BVER against its unidirectional variants, i.e., only expanding the curriculum from the initial distribution (forwards expansion) or only expanding it from the goal (backwards expansion). On box climbing, we compare on the two symmetric tasks (up and down) and two box heights (\SI{0.4}{\meter} and \SI{0.7}{\meter}). The results in Figure~\ref{fig:eval_ablations} show that combining forwards and backwards expansions leads to the best results irrespective of the task (up or down) and box height. In both tasks, the expansion that starts on top of the box performs better than the one that starts on the ground. This is likely because the random walks are subject to gravity, so traversing down the box edge is more likely than traversing up it. The mazes show the same picture: in the \textit{U-maze}, where the path is short, all variants converge, whereas in the \textit{N-maze} and \textit{large maze} the bidirectional expansion converges faster than either direction alone. On Tower of Hanoi, the forwards expansion alone never finds a solution, the backwards expansion alone converges roughly three times slower, and only the combination converges reliably.
+We evaluate the effect of the bidirectional expansion by comparing BVER against its unidirectional variants, i.e., only expanding the curriculum from the initial distribution (forwards expansion) or only expanding it from the goal (backwards expansion). On box climbing, we compare on the two symmetric tasks (up and down) and two box heights (\SI{0.4}{\meter} and \SI{0.7}{\meter}). The results in Figure~\ref{fig:eval_ablations} show that combining forwards and backwards expansions leads to the best results irrespective of the task (up or down) and box height. In both tasks, the expansion that starts on top of the box performs better than the one that starts on the ground. This is likely because the random walks are subject to gravity, so traversing down the box edge is more likely than traversing up it. The mazes show the same picture: in the \textit{U-maze}, where the path is short, all variants converge, whereas in the \textit{N-maze} and \textit{large maze} the bidirectional expansion converges faster than either direction alone. On Tower of Hanoi, both backwards and forwards expansion alone are not sufficient to reach a full success rate, while combining the two leads to 100\% success. In our experiments we found that the unidirectional variants are able to expand from the respective peg to the free space in between, but are unable to reach the other peg reliably. Thus, the combination of both expansion directions is necessary.
 \begin{figure}[h]
     \centering
     \hfill
@@ -250,7 +250,7 @@ We evaluate the effect of the bidirectional expansion by comparing BVER against 
     \hfill
     \begin{subfigure}[c]{0.24\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{img/manipulation/eval_comparison_hanoi_abl_dir.png}
+        \includegraphics[width=\linewidth]{img/manipulation/eval_comparison_hanoi_abl_dir.pdf}
         \caption{Tower of Hanoi.}\label{fig:hanoi_abl_dir}
     \end{subfigure}
     \hfill\strut{}
