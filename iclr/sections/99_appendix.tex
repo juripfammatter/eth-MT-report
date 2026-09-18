@@ -41,7 +41,7 @@ replaying a fraction $\nu$ of solved states.
 % \end{equation*}
 
 \subsection{Experiment setup}\label{sec:appendix_obs_act}
-The following tables use these abbreviations: Point-Maze (PM), Climb Up (CI), Climb Down (CD), Multiple Terrains Path (MTP), Freestanding Boulder I (FB I), Freestanding Boulder II (FB II), Rocky Ascent (RA), Small Stone Field (SSF), and Tower of Hanoi (TH).
+All policies are trained with the PPO implementation of the RSL-RL framework~\citep{schwarke2025rslrllearninglibraryrobotics}. The following tables use these abbreviations: Point-Maze (PM), Climb Up (CI), Climb Down (CD), Multiple Terrains Path (MTP), Freestanding Boulder I (FB I), Freestanding Boulder II (FB II), Rocky Ascent (RA), Small Stone Field (SSF), and Tower of Hanoi (TH).
 
 \paragraph{Point-Maze (PM).}
 The agent is a velocity-controlled point mass in a walled grid with \SI{4}{\meter} cells, controlled at \SI{20}{\hertz}. The observation is six-dimensional and noise-free: the planar position, the planar velocity and the vector to the goal; actor and critic receive the same input. The action is a two-dimensional planar velocity command. The reward consists of a single sparse term: +1 if the agent comes within \SI{1}{\meter} of the goal. The episode terminates after a fixed horizon.
@@ -95,7 +95,7 @@ A Franka Panda with stiff joints holds a ring that is rigidly attached to its ha
         $R_{\min}$                       & $0.1$                           & $0.1$           & $0.1$           & $0.05$          & $0.05$          & $0.05$               & $0.1$          \\
         $R_{\max}$                       & $0.85$                          & $0.85$          & $0.85$          & $0.2$           & $0.2$           & $0.2$                & $0.85$         \\
         Replay ratio $\nu$               & $0.2$                           & $0.2$           & $0.2$           & $0.0$           & $0.05$          & $0.05$               & $0.1$          \\
-        $p_{\mathrm{connect}}$           & $0.0$                           & $0.5$           & $0.5$           & $0.5$           & $0.0$           & $0.0$                & $0.5$          \\
+        $p_{\mathrm{connect}}$           & $0.0$                           & $0.5$           & $0.5$           & $0.5$           & $0.5$           & $0.0$                & $0.5$          \\
         Buffer size $M_F$                & $10^3$                          & $10^3$          & $10^3$          & $2\cdot10^3$    & $2\cdot10^3$    & $2\cdot10^3$         & $10^3$         \\
         Buffer size $M_S$                & $10^3$                          & $10^3$          & $10^3$          & $10^4$          & $10^4$          & $10^4$               & $10^3$         \\
         Buffer size $M_C$                & $500$                           & $500$           & $500$           & $5\cdot10^3$    & $5\cdot10^3$    & $5\cdot10^3$         & $500$          \\

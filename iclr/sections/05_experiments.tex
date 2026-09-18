@@ -1,231 +1,157 @@
 % ~2-2.5 pages.
 \section{Experiments}\label{sec:experiments}
 
-
-
-We conduct four experiments to answer the following research questions:
+We design our experiments to answer the following research questions:
 \begin{enumerate}
-    \item Does our method outperform state-of-the-art curriculum learning methods on a high-dimensional quadrupedal locomotion task with sparse rewards and long horizons?
-    \item Does expanding the curriculum bidirectionally improve sample efficiency and robustness compared to unidirectional expansion?
+    \item Does BVER improve sample efficiency and robustness over existing curriculum learning methods, and does it do so across different domains (navigation, locomotion, manipulation)?
     \item Does task-space coverage-driven exploration promote more diverse learning outcomes?
-    \item Does our method transfer to real-world terrains and tasks, demonstrating its practical applicability and robustness in real-world scenarios?
+    \item Does BVER transfer to real-world scanned terrains without task-specific tuning?
+    \item How do the individual components of BVER, the two expansion directions and the connect step, contribute to its performance?
 \end{enumerate}
 
-%TODO: review once we have all experiments
-
-The experiments are implemented in Isaac Lab~\citep{nvidia2025isaaclabgpuacceleratedsimulation} with the ANYmal D quadrupedal agent and the RSL-RL framework~\citep{schwarke2025rslrllearninglibraryrobotics} for training the policy with PPO~\citep{schulman2017proximal}. The following experiments use standard observation and action spaces which are detailed in Appendix~\ref{sec:appendix_obs_act}. The tasks are shown in Figure~\ref{fig:experiment_renders}. The task space $\mathcal{T}$ used for our method's random point sampling and goal definition is a 3D box defined in the $(x,y,z)$ space, i.e., $\phi(s)$ is the projection of the base position to $(x,y,z)$. We found this to be the most effective task space, as it is both convenient for goal definition and provides a simple Euclidean distance metric for the nearest-neighbor search.
+All experiments are implemented in Isaac Lab~\citep{nvidia2025isaaclabgpuacceleratedsimulation} and trained with PPO~\citep{schulman2017proximal}. Figure~\ref{fig:experiment_renders} shows the experiments: three point-mass mazes, quadrupedal locomotion experiments with the ANYmal D robot (box climbing, a three-route terrain, and four scanned real-world terrains), and a manipulation task with a Franka Panda arm. Unless stated otherwise, the reward is purely sparse: the agent receives $+1$ when it reaches the goal within a fixed tolerance, and no shaping terms are used. The task space $\mathcal{T}$ used for goal definition and for BVER's random point sampling is a box in $(x,y,z)$ space, i.e., $\phi(s)$ is the projection of the base (or ring) position to $(x,y,z)$. We found this to be the most effective task space, as it is both convenient for goal definition and provides a simple Euclidean distance metric for the nearest-neighbor search. Observation and action spaces, rewards, and hyperparameters of all experiments are detailed in Appendix~\ref{sec:appendix_obs_act}.
 \begin{figure}[h]
     \centering
+    \captionsetup[subfigure]{justification=centering}
     \hfill
-    \begin{subfigure}[t]{0.24\linewidth}
+    \begin{subfigure}[t]{0.112\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/maze/layouts/maze_u.png}
+        \caption{U-maze.}\label{fig:exp_renders_maze_u}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.112\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/maze/layouts/maze_serpentine.png}
+        \caption{N-maze.}\label{fig:exp_renders_maze_n}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.112\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/maze/layouts/maze_scatter.png}
+        \caption{Large maze.}\label{fig:exp_renders_maze_large}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.2\linewidth}
         \centering
         \includegraphics[width=\linewidth]{img/thumbnails/climb_box_up.png}
         \caption{Climb box up.}\label{fig:exp_renders_climb_box_up}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[t]{0.24\linewidth}
+    \begin{subfigure}[t]{0.2\linewidth}
         \centering
         \includegraphics[width=\linewidth]{img/thumbnails/climb_box_down.png}
         \caption{Climb box down.}\label{fig:exp_renders_climb_box_down}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[t]{0.24\linewidth}
+    \begin{subfigure}[t]{0.2\linewidth}
         \centering
         \includegraphics[width=\linewidth]{img/thumbnails/dtsg.png}
-        \caption{Multiple terrain paths.}\label{fig:exp_renders_dtsg}
+        \caption{Three-route terrain.}\label{fig:exp_renders_dtsg}
     \end{subfigure}
+    \hfill\strut{}\\
     \hfill
-    \begin{subfigure}[t]{0.24\linewidth}
+    \begin{subfigure}[t]{0.19\linewidth}
         \centering
         \includegraphics[width=\linewidth]{img/thumbnails/hanoi_p12.png}
         \caption{Tower of Hanoi.}\label{fig:exp_renders_hanoi_p12}
     \end{subfigure}
-    \hfill\strut{}\\
     \hfill
-    \begin{subfigure}[t]{0.24\linewidth}
+    \begin{subfigure}[t]{0.19\linewidth}
         \centering
         \includegraphics[width=\linewidth]{img/thumbnails/scan_boulder_small_rocks.png}
         \caption{Freestanding boulder I.}\label{fig:exp_renders_freestanding_boulder_I}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[t]{0.24\linewidth}
+    \begin{subfigure}[t]{0.19\linewidth}
         \centering
         \includegraphics[width=\linewidth]{img/thumbnails/scan_freestanding_boulder.png}
         \caption{Freestanding boulder II.}\label{fig:exp_renders_freestanding_boulder_II}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[t]{0.24\linewidth}
+    \begin{subfigure}[t]{0.19\linewidth}
         \centering
         \includegraphics[width=\linewidth]{img/thumbnails/scan_rocky_ascent.png}
         \caption{Rocky ascent.}\label{fig:exp_renders_rocky_ascent}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[t]{0.24\linewidth}
+    \begin{subfigure}[t]{0.19\linewidth}
         \centering
         \includegraphics[width=\linewidth]{img/thumbnails/scan_small_rocks.png}
         \caption{Small stone field.}\label{fig:exp_renders_small_rocks}
     \end{subfigure}
     \hfill
-    \caption{Experimental setup. {\color{cyan}Cyan} indicates the initial distribution, {\color{teal} green} the target goal, and the white box represents the task space.}\label{fig:experiment_renders}
+    \caption{Task overview: three point-mass mazes (a--c), quadrupedal box climbing (d, e), the three-route terrain (f), Tower of Hanoi manipulation (g), and four scanned real-world terrains (h--k). {\color{cyan}Cyan} indicates the initial distribution, {\color{teal} green} the target goal, and the white box represents the task space.}\label{fig:experiment_renders}
 \end{figure}
 
-%TODO: add sentence about the experiment setup
+\subsection{Sample Efficiency and Robustness across Domains}\label{sec:exp_main}
+To answer research question 1, we compare BVER against curriculum learning baselines in three domains. In the \textit{point-mass mazes} (Figures~\ref{fig:exp_renders_maze_u}--\ref{fig:exp_renders_maze_large}), similar to those used in prior work~\citep{florensa2017reverse,cho2023outcome}, a velocity-controlled point mass has to find a path from the initial distribution to the goal. In \textit{box climbing} (Figures~\ref{fig:exp_renders_climb_box_up} and~\ref{fig:exp_renders_climb_box_down}), the quadruped has to reach a goal on top of a box from an initial distribution in front of it or, in the symmetric climb-down task, a goal on the ground from the top of the box. In \textit{Tower of Hanoi} (Figure~\ref{fig:exp_renders_hanoi_p12}), a Franka Panda arm has to move a ring from the bottom of one peg to the bottom of another. On all tasks, we compare against PPO without a curriculum (\textit{vanilla PPO}) and a simple curriculum that samples intermediate starts and goals uniformly from the free task space (\textit{random curriculum}). On box climbing, we additionally compare against the reference-free reverse curriculum (RC)~\citep{florensa2017reverse} and two reference-based methods that require a demonstration (marked with $\star$): reference state initialization (RSI)~\citep{peng2018deepmimic} and Backplay~\citep{resnick2018backplay}.
 
-\subsection{Sample Efficiency and Robustness}\label{sec:exp_main}
-To evaluate sample efficiency and robustness, we compare our method BVER against state-of-the-art curriculum learning methods on a sparse-reward box climbing task. The task is defined as a goal-conditioned locomotion task where the agent has to reach a target goal position on top of a box from an initial distribution of start positions in front of the box. The task is challenging due to the sparse reward signal and the long horizon required to reach the goal.
 \paragraph{Sample Efficiency:}
-The results in Figure~\ref{fig:bench} already show a clear distinction between the vanilla PPO baseline, the curricula and the imitation learning methods (marked with $\star$). The policies trained on the initial distributions and no curriculum (vanilla PPO) are unable to solve the task, while training with random starts achieves a success rate of more than 95\%. This shows that the reward signal is attainable and the task solvable by initializing the agent closer to the goal.
-Backplay~\citep{resnick2018backplay} shows the fastest convergence, and its advantage over RSI~\citep{peng2018deepmimic} shows the importance of ordering the task over training time. For the reference-free curricula, our method BVER shows the fastest convergence and highest success rate, outperforming both RC~\citep{florensa2017reverse} and random starts, while even surpassing RSI. BVER reaches a success rate of 95\% in roughly 65\% fewer training iterations than the best reference-free baseline.
+Figure~\ref{fig:bench_domains} shows the success rate over training. Vanilla PPO succeeds only for a few seeds in the simplest \textit{U-maze} and never on any other task, while both curricula solve all tasks, showing that the reward signal is attainable once the agent is initialized closer to the goal. In the \textit{U-maze}, where the path is short, the random curriculum is sufficient and converges slightly faster than BVER. In the more complex \textit{N-maze} and \textit{large maze}, where the optimal path covers only a small fraction of the free space, BVER converges faster than the random curriculum. On Tower of Hanoi, BVER first reaches a success rate of 100\% in roughly half the iterations of the random curriculum. On box climbing (Figure~\ref{fig:bench}), the results show a clear distinction between vanilla PPO, the reference-free curricula, and the reference-based methods. Backplay shows the fastest convergence, and its advantage over RSI shows the importance of ordering the task over training time. Among the reference-free curricula, BVER shows the fastest convergence and the highest success rate, outperforming both RC and the random curriculum, and even surpasses RSI. BVER reaches a success rate of 95\% in roughly 65\% fewer training iterations than the best reference-free baseline. Across all three domains, BVER uses the same curriculum mechanism and the same task-space definition without any domain-specific engineering.
 % TODO: verify the 65% against the logged iteration counts (mean over seeds) and name the baseline.
 
 \paragraph{Robustness:}
-We evaluate the trained policies on (1) perturbations to the yaw angle used in the initialization, (2) variations in start positions (goal set to the target goal), and (3) variations in goal positions (initialized on the initial distribution). The results in Figure~\ref{fig:robustness} show that BVER's bidirectional curriculum leads to policies that can solve the task under various start-goal configurations, while the other curricula fail to generalize to unseen configurations.
+We evaluate the policies trained on box climbing under (1) perturbations to the yaw angle used in the initialization, (2) variations in start positions (goal set to the target goal), and (3) variations in goal positions (initialized on the initial distribution). The results in Figure~\ref{fig:robustness} show that BVER's bidirectional curriculum leads to policies that can solve the task under various start-goal configurations, while the other curricula fail to generalize to unseen configurations.
 \begin{figure}[h]
     \centering
+    \hfill
+    \begin{subfigure}[c]{0.24\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/maze/u/eval_comparison_u_maze_bench.png}
+        \caption{U-maze.}\label{fig:maze_bench_u}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[c]{0.24\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/maze/N/eval_comparison_N_maze_bench.png}
+        \caption{N-maze.}\label{fig:maze_bench_n}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[c]{0.24\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/maze/large/eval_comparison_large_maze_bench.png}
+        \caption{Large maze.}\label{fig:maze_bench_large}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[c]{0.24\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/manipulation/eval_comparison_hanoi_bench.png}
+        \caption{Tower of Hanoi.}\label{fig:hanoi_bench}
+    \end{subfigure}
+    \hfill\strut{}\\
     \hfill
     \begin{subfigure}[c]{0.6\linewidth}
         \centering
         \includegraphics[width=\linewidth]{img/sb/eval_comparison_41_up_clean_comp.png}
-        \caption{BVER is able to achieve a success rate of over 95\% faster than all other reference-free curricula and even faster than one reference-based method (RSI).}\label{fig:bench}
+        \caption{Box climbing (\SI{0.4}{\meter}, up).}\label{fig:bench}
     \end{subfigure}
     \hfill
     \begin{subfigure}[c]{0.3\linewidth}
         \centering
         \includegraphics[width=\linewidth]{img/sb/robustness_spider_headline_nolegend.png}
-        \caption{BVER's start-goal curriculum leads to policies that can solve the task under various start-goal configurations.}\label{fig:robustness}
+        \caption{Robustness on box climbing.}\label{fig:robustness}
     \end{subfigure}
     \hfill\strut{}
-    \caption{Sample efficiency and robustness evaluated on a sparse-reward box climbing task.}\label{fig:eval_04}
+    \caption{Sample efficiency across domains (a--e) and robustness on box climbing (f). Vanilla PPO fails on all tasks but the \textit{U-maze}, where it succeeds for a few seeds. BVER converges fastest among the reference-free curricula on all tasks except the \textit{U-maze}, and on box climbing even faster than one reference-based method (RSI, marked with $\star$). BVER's start-goal curriculum leads to policies that solve the task under various start-goal configurations.}\label{fig:bench_domains}
 \end{figure}
 
-\subsection{Ablations: Forwards / Backwards Symmetry}\label{sec:exp_ablations}
+\subsection{Path Diversity}\label{sec:exp_emergent}
 
-\paragraph{Maze ablations:}\label{sec:exp_ablations_maze}
-To evaluate the contribution of individual components of BVER, we conduct further ablation studies on three maze environments (Figure~\ref{fig:maze_layout}) similar to those used in prior work~\citep{florensa2017reverse,cho2023outcome}. Specifically, the agent ({\color{orange}orange point mass}) has to find a path from the initial distribution ({\color{cyan}cyan rectangle}) to the goal ({\color{teal}green ball}). First, we evaluate the effect of our curriculum against a baseline that does not use any curriculum (\textit{vanilla PPO}) and a simple curriculum that samples intermediate goals (to reach from the start) and intermediate starts (from which to reach the target goal) randomly from the free space (\textit{random initializations}). The results in Figure~\ref{fig:maze_ablation_bench} show that both curricula enable finding solutions in all three environments, whereas vanilla PPO does not. In the more complex \textit{N-maze} and \textit{large-maze} environments, BVER shows faster convergence than the random curriculum.
-
-We compare using only the forwards expansion, only the backwards expansion, and the bidirectional expansion in Figure~\ref{fig:maze_ablation_dir}. In addition, we evaluate the effect of connecting the two frontiers by comparing a version of BVER that only samples from the task space to a version that samples from both the task space and the other frontier. The results in Figure~\ref{fig:maze_ablation_connect} show that connecting the two frontiers leads to better sample efficiency in the cases where the optimal path covers only a small fraction of the total search space (\textit{N-maze} and \textit{large-maze}). However, there is no significant difference between connect ratios above 0.5.
-\begin{figure}[h]
-    \centering
-    \hfill
-    \begin{subfigure}[c]{0.11\linewidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/maze/layouts/maze_u.png}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[c]{0.29\linewidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/maze/u/eval_comparison_u_maze_bench.png}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[c]{0.29\linewidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/maze/u/eval_comparison_u_maze_abl_dir.png}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[c]{0.29\linewidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/maze/u/eval_comparison_u_maze_abl_connect.png}
-    \end{subfigure}
-    %
-    \hfill\strut{}\\[-2em]
-    \hfill
-    \begin{subfigure}[c]{0.11\linewidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/maze/layouts/maze_serpentine.png}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[c]{0.29\linewidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/maze/N/eval_comparison_N_maze_bench.png}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[c]{0.29\linewidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/maze/N/eval_comparison_N_maze_abl_dir.png}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[c]{0.29\linewidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/maze/N/eval_comparison_N_maze_abl_connect.png}
-    \end{subfigure}
-    \hfill\strut{}\\[-2em]
-    %
-    \hfill
-    \begin{subfigure}[c]{0.11\linewidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/maze/layouts/maze_scatter.png}
-        \caption{Maze layout.}\label{fig:maze_layout}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[c]{0.29\linewidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/maze/large/eval_comparison_large_maze_bench.png}
-        \caption{Benchmark.}\label{fig:maze_ablation_bench}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[c]{0.29\linewidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/maze/large/eval_comparison_large_maze_abl_dir.png}
-        \caption{Direction ablation.}\label{fig:maze_ablation_dir}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[c]{0.29\linewidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/maze/large/eval_comparison_large_maze_abl_connect.png}
-        \caption{Connect ablation.}\label{fig:maze_ablation_connect}
-    \end{subfigure}
-    \hfill\strut{}
-    \caption{Comparison of BVER against vanilla PPO and a random curriculum, and ablations of different components (expansion directions) and hyperparameters (connect ratio).}\label{fig:eval_maze_ablations}
-\end{figure}
-
-\begin{wrapfigure}{r}{0.55\linewidth}
-    \centering
-    \vspace{-\baselineskip}
-    \begin{subfigure}[b]{0.48\linewidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/sb/eval_comparison_41_up_ours.png}
-        \caption{Climb 0.4 m box up.}\label{fig:eval_comparison_41_up_ours}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.48\linewidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/sb/eval_comparison_72_up_ours.png}
-        \caption{Climb 0.7 m box up.}\label{fig:eval_comparison_72_up_ours}
-    \end{subfigure}
-    \\[1ex]
-    \begin{subfigure}[b]{0.48\linewidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/sb/eval_comparison_41_down_ours.png}
-        \caption{Climb 0.4 m box down.}\label{fig:eval_comparison_41_down_ours}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.48\linewidth}
-        \centering
-        \includegraphics[width=\linewidth]{img/sb/eval_comparison_72_down_ours.png}
-        \caption{Climb 0.7 m box down.}\label{fig:eval_comparison_72_down_ours}
-    \end{subfigure}
-    \caption{Ablations on the box climbing task show that combining forwards and backwards expansions leads to the best results irrespective of direction (up or down) and box height.}\label{fig:eval_ablations}
-\end{wrapfigure}
-\paragraph{Box climbing ablations:}
-We evaluate the effect of the bidirectional expansion mechanism by comparing BVER on two symmetric climbing tasks (up and down) against its unidirectional variants, i.e., only expanding the curriculum from the start state (forwards expansion) or only expanding the curriculum from the goal state (backwards expansion). The results in Figure~\ref{fig:eval_ablations} show that combining forwards and backwards expansions leads to the best results irrespective of the task (up or down) and box height. In both tasks, the expansion that starts on top of the box performs better than the one that starts on the ground. This is likely because the random walks are subject to gravity, so traversing down the box edge is more likely than traversing up it.
-
-
-\subsection{Emergent Behavior: Path Diversity}\label{sec:exp_emergent}
-
-\begin{wrapfigure}{r}{0.4\linewidth}
+\begin{wrapfigure}{r}{0.3\linewidth}
     \centering
     \vspace{-\baselineskip}
     \includegraphics[width=\linewidth]{img/dt/trajectories_model_1999_headline.png}
     \caption{Path diversity on the three-route terrain. PPO without a curriculum collapses onto the ramp, while BVER learns to traverse all three routes.}\label{fig:eval_path_diversity}
 \end{wrapfigure}
 
-To answer research question 3, we design a task with three qualitatively different routes from the initial distribution to the goal: a set of stairs in the center, a field of pillars on one side, and a ramp on the other (Figure~\ref{fig:exp_renders_dtsg}). The initial distribution is chosen to span the full width of the terrain, such that each of the three routes is the closest one for roughly a third of the initial states and no route is favored. After training, we roll out both policies from this broad initial distribution and classify every successful episode by the route it takes.
+To answer research question 2, we design a task with three qualitatively different routes from the initial distribution to the goal: a set of stairs in the center, a field of pillars on one side, and a ramp on the other (Figure~\ref{fig:exp_renders_dtsg}). The initial distribution is chosen to span the full width of the terrain, such that each of the three routes is the closest one for roughly a third of the initial states and no route is favored. This is the only task in which we add a dense reward term: a potential-based shaping term~\citep{ng1999policy}, which leaves the set of optimal policies unchanged, provides a reward signal strong enough for the no-curriculum PPO baseline to find a solution at all, while BVER's reward band is still evaluated on the sparse term only (Appendix~\ref{sec:appendix_obs_act}). After training, we roll out both policies from this broad initial distribution and classify every successful episode by the route it takes.
 
 Figure~\ref{fig:eval_path_diversity} shows that PPO without a curriculum collapses onto a single behavior: all successful episodes traverse the ramp, which is the easiest but not necessarily the shortest route, regardless of where the episode starts. Once this route is discovered, exploration of the remaining task space stops, and the policy never learns to climb the stairs or navigate the pillars, even when it is initialized directly in front of them. In contrast, BVER's task-space coverage-driven expansion forces the curriculum to remain active in all regions of the task space, and the resulting policy uses all three routes, choosing the one closest to its initial state. This indicates that task-space coverage promotes more diverse learning outcomes: rather than committing to the first solution it finds, the policy acquires the full set of locomotion skills the terrain affords, which makes it less dependent on any single route being available.
 
 \subsection{Real-World Terrains}\label{sec:exp_real_world}
 
-To show its practical applicability and answer research question 4, we evaluate BVER on four different real-world terrains with the ANYmal D quadrupedal robot in an identical setup to the box climbing task in Section~\ref{sec:exp_main}. We use the same hyperparameters and curriculum settings as in the box climbing task, and choose the task space to roughly cover the terrain area. The four terrains in Figure~\ref{fig:experiment_renders} can be categorized as follows: (1) climbing a freestanding boulder (Figures~\ref{fig:exp_renders_freestanding_boulder_I} and~\ref{fig:exp_renders_freestanding_boulder_II}), (2) traversing over a field of small stones (Figure~\ref{fig:exp_renders_small_rocks}), and (3) ascending a steep rocky slope (Figure~\ref{fig:exp_renders_rocky_ascent}), each requiring different locomotion skills. On the \textit{freestanding boulders} and the \textit{small stone field}, the initial distribution is chosen such that no specific path to the goal is favored and the policy has to find its own path to the goal. Table~\ref{tab:real_world_results} shows that, similar to box climbing, PPO without a curriculum is unable to solve the task, while BVER finds solutions in reasonable time on all four terrains.
+To answer research question 3, we evaluate BVER on four scanned real-world terrains. We choose the locomotion domain for this study as it is the most challenging of the three domains and the closest to real deployment. The setup is identical to the box climbing task in Section~\ref{sec:exp_main}: we use the same hyperparameters and curriculum settings, and choose the task space to roughly cover the terrain area. The four terrains in Figure~\ref{fig:experiment_renders} can be categorized as follows: (1) climbing a freestanding boulder (Figures~\ref{fig:exp_renders_freestanding_boulder_I} and~\ref{fig:exp_renders_freestanding_boulder_II}), (2) traversing over a field of small stones (Figure~\ref{fig:exp_renders_small_rocks}), and (3) ascending a steep rocky slope (Figure~\ref{fig:exp_renders_rocky_ascent}), each requiring different locomotion skills. On the \textit{freestanding boulders} and the \textit{small stone field}, the initial distribution is chosen such that no specific path to the goal is favored and the policy has to find its own path to the goal. Table~\ref{tab:real_world_results} shows that, similar to box climbing, PPO without a curriculum is unable to solve the task, while BVER finds solutions in reasonable time on all four terrains.
 % \renewcommand{\arraystretch}{1.3}
 \begin{table}[h]
     \centering
@@ -239,7 +165,7 @@ To show its practical applicability and answer research question 4, we evaluate 
 \end{table}
 % \renewcommand{\arraystretch}{1}
 
-Figure~\ref{fig:scans} shows the explored regions on the \textit{rocky ascent} terrain at different training iterations. The intermediate starts and goals are clustered around their respective roots at the beginning of training, and gradually expand to cover the entire task space as the policy's skill improves. Even though the task space (black/white box) is much larger than the reachable area of the robot, the curriculum is able to find a path to the goal without any prior knowledge of the terrain, showing the effectiveness of the random walks. The even spread of intermediate starts and goals across the task space indicates that the policy has learned to traverse the terrain rather than just solving the target task.
+Figure~\ref{fig:scans} shows the explored regions on the \textit{rocky ascent} terrain at different training iterations. The intermediate starts and goals are clustered around their respective roots at the beginning of training, and gradually expand to cover the entire task space as the policy's skill improves. Even though the task space (black box) is much larger than the reachable area of the robot, the curriculum is able to find a path to the goal without any prior knowledge of the terrain, showing the effectiveness of the random walks. The even spread of intermediate starts and goals across the task space indicates that the policy has learned to traverse the terrain rather than just solving the target task.
 \begin{figure}[h]
     \centering
     \hfill
@@ -269,13 +195,90 @@ Figure~\ref{fig:scans} shows the explored regions on the \textit{rocky ascent} t
     \hfill\strut{}
     \caption{Samples of the explored regions on the \textit{rocky ascent} terrain at different training iterations. {\color{blue} Blue} indicates the intermediate goals (forwards expansion), {\color{orange} orange} indicates the intermediate starts (backwards expansion), {\color{cyan}cyan} indicates the initial distribution, and the black/white box represents the task space.}\label{fig:scans}
 \end{figure}
-\subsection{Generalization to Different Domains: Manipulation Tasks}\label{sec:exp_manipulation}
 
-todo
-\begin{wrapfigure}{r}{0.24\linewidth}
+\subsection{Ablations}\label{sec:exp_ablations}
+
+To answer research question 4, we use the box climbing task and the three point-mass mazes as our testbed, and additionally verify the effect of the expansion direction on the Tower of Hanoi task.
+
+\paragraph{Expansion direction:}
+We evaluate the effect of the bidirectional expansion by comparing BVER against its unidirectional variants, i.e., only expanding the curriculum from the initial distribution (forwards expansion) or only expanding it from the goal (backwards expansion). On box climbing, we compare on the two symmetric tasks (up and down) and two box heights (\SI{0.4}{\meter} and \SI{0.7}{\meter}). The results in Figure~\ref{fig:eval_ablations} show that combining forwards and backwards expansions leads to the best results irrespective of the task (up or down) and box height. In both tasks, the expansion that starts on top of the box performs better than the one that starts on the ground. This is likely because the random walks are subject to gravity, so traversing down the box edge is more likely than traversing up it. The mazes show the same picture: in the \textit{U-maze}, where the path is short, all variants converge, whereas in the \textit{N-maze} and \textit{large maze} the bidirectional expansion converges faster than either direction alone. On Tower of Hanoi, the forwards expansion alone never finds a solution, the backwards expansion alone converges roughly three times slower, and only the combination converges reliably.
+\begin{figure}[h]
     \centering
-    \vspace{-\baselineskip}
-    \includegraphics[width=\linewidth]{img/manipulation/eval_comparison_hanoi_bench.png}
-    \includegraphics[width=\linewidth]{img/manipulation/eval_comparison_hanoi_abl_dir.png}
-    \caption{Top row shows the benchmark results, and the bottom row shows the ablation results.}\label{fig:hanoi_p12}
-\end{wrapfigure}
+    \hfill
+    \begin{subfigure}[c]{0.24\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/sb/eval_comparison_41_up_ours.png}
+        \caption{\SI{0.4}{\meter} box, up.}\label{fig:eval_comparison_41_up_ours}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[c]{0.24\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/sb/eval_comparison_72_up_ours.png}
+        \caption{\SI{0.7}{\meter} box, up.}\label{fig:eval_comparison_72_up_ours}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[c]{0.24\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/sb/eval_comparison_41_down_ours.png}
+        \caption{\SI{0.4}{\meter} box, down.}\label{fig:eval_comparison_41_down_ours}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[c]{0.24\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/sb/eval_comparison_72_down_ours.png}
+        \caption{\SI{0.7}{\meter} box, down.}\label{fig:eval_comparison_72_down_ours}
+    \end{subfigure}
+    \hfill\strut{}\\
+    \hfill
+    \begin{subfigure}[c]{0.24\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/maze/u/eval_comparison_u_maze_abl_dir.png}
+        \caption{U-maze.}\label{fig:maze_ablation_dir_u}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[c]{0.24\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/maze/N/eval_comparison_N_maze_abl_dir.png}
+        \caption{N-maze.}\label{fig:maze_ablation_dir_n}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[c]{0.24\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/maze/large/eval_comparison_large_maze_abl_dir.png}
+        \caption{Large maze.}\label{fig:maze_ablation_dir_large}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[c]{0.24\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/manipulation/eval_comparison_hanoi_abl_dir.png}
+        \caption{Tower of Hanoi.}\label{fig:hanoi_abl_dir}
+    \end{subfigure}
+    \hfill\strut{}
+    \caption{Expansion direction ablation. Combining forwards and backwards expansions leads to the best results on box climbing irrespective of direction (up or down) and box height (a--d), on the more complex mazes (f, g), and on Tower of Hanoi (h); in the short \textit{U-maze} (e), all variants converge similarly.}\label{fig:eval_ablations}
+\end{figure}
+
+\paragraph{Connecting the frontiers:}
+We evaluate the effect of connecting the two frontiers by comparing a version of BVER that only samples from the task space (connect ratio $0$) to versions that sample from both the task space and the other frontier. The results in Figure~\ref{fig:maze_ablation_connect} show that connecting the two frontiers leads to better sample efficiency in the cases where the optimal path covers only a small fraction of the total search space (\textit{N-maze} and \textit{large maze}). However, there is no significant difference between connect ratios above $0.5$.
+\begin{figure}[h]
+    \centering
+    \hfill
+    \begin{subfigure}[c]{0.3\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/maze/u/eval_comparison_u_maze_abl_connect.png}
+        \caption{U-maze.}\label{fig:maze_ablation_connect_u}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[c]{0.3\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/maze/N/eval_comparison_N_maze_abl_connect.png}
+        \caption{N-maze.}\label{fig:maze_ablation_connect_n}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[c]{0.3\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{img/maze/large/eval_comparison_large_maze_abl_connect.png}
+        \caption{Large maze.}\label{fig:maze_ablation_connect_large}
+    \end{subfigure}
+    \hfill\strut{}
+    \caption{Connect ratio ablation on the three mazes. Connecting the frontiers improves sample efficiency where the optimal path covers only a small fraction of the search space.}\label{fig:maze_ablation_connect}
+\end{figure}
