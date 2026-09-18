@@ -47,13 +47,11 @@ Both the exploration and exploitation steps are repeated until the policy is abl
 
 
 \subsection{Bidirectional Expansion}
-\begin{wrapfigure}{r}{0.3\linewidth}
+\begin{wrapfigure}{r}{0.2\linewidth}
     \centering
     % \vspace{-\baselineskip} % add again if formatting changes
     \includegraphics[width=\linewidth]{img/graphics/connect.pdf}
-    \caption{The forwards expansion set can be connected to the backwards
-        expansion set by sampling from the other mixed training set rather than
-        random samples from the task space.}\label{fig:connect}
+    \caption{The connect step.}\label{fig:connect}
 \end{wrapfigure}
 \paragraph{Forwards expansion:}
 The backwards expansion mechanism described in the previous section can be applied to the forwards expansion by substituting the start state with the goal state. The goal-conditioned policy is trained on initial states sampled from the initial distribution $\rho_0$ and goals sampled from the spatial frontier of the explored state space, i.e., $(s_0 \sim \rho_0,\, g_i)$ rather than $(s_i,\, g^\star)$. The exploration and exploitation steps are then identical, with the minor difference that the random walks are seeded in states that can be reached rather than states from which the goal can be reached.
