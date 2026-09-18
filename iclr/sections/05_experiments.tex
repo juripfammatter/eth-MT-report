@@ -138,11 +138,11 @@ We evaluate the policies trained on box climbing under (1) perturbations to the 
 
 \subsection{Path Diversity}\label{sec:exp_emergent}
 
-\begin{wrapfigure}{r}{0.3\linewidth}
+\begin{wrapfigure}[16]{r}{0.3\linewidth}
     \centering
     \vspace{-\baselineskip}
     \includegraphics[width=\linewidth]{img/dt/trajectories_model_1999_headline.pdf}
-    \caption{Path diversity on the three-route terrain. PPO without a curriculum collapses onto the ramp, while BVER learns to traverse all three routes.}\label{fig:eval_path_diversity}
+    \caption{Path diversity of BVER on the three-route terrain compared to PPO.}\label{fig:eval_path_diversity}
 \end{wrapfigure}
 
 To answer research question 2, we design a task with three qualitatively different routes from the initial distribution to the goal: a set of stairs in the center, a field of pillars on one side, and a ramp on the other (Figure~\ref{fig:exp_renders_dtsg}). The initial distribution is chosen to span the full width of the terrain, such that each of the three routes is the closest one for roughly a third of the initial states and no route is favored. This is the only task in which we add a dense reward term: a potential-based shaping term~\citep{ng1999policy}, which leaves the set of optimal policies unchanged, provides a reward signal strong enough for the no-curriculum PPO baseline to find a solution at all, while BVER's reward band is still evaluated on the sparse term only (Appendix~\ref{sec:appendix_obs_act}). After training, we roll out both policies from this broad initial distribution and classify every successful episode by the route it takes.
@@ -261,24 +261,24 @@ We evaluate the effect of the bidirectional expansion by comparing BVER against 
 We evaluate the effect of connecting the two frontiers by comparing a version of BVER that only samples from the task space (connect ratio $0$) to versions that sample from both the task space and the other frontier. The results in Figure~\ref{fig:maze_ablation_connect} show that connecting the two frontiers leads to better sample efficiency in the cases where the optimal path covers only a small fraction of the total search space (\textit{N-maze} and \textit{large maze}). However, there is no significant difference between connect ratios above $0.5$.
 \begin{figure}[h]
     \centering
-    \hfill
-    \begin{subfigure}[c]{0.3\linewidth}
+    \hfill\hfill
+    \begin{subfigure}[c]{0.24\linewidth}
         \centering
         \includegraphics[width=\linewidth]{img/maze/u/eval_comparison_u_maze_abl_connect.pdf}
         \caption{U-maze.}\label{fig:maze_ablation_connect_u}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[c]{0.3\linewidth}
+    \begin{subfigure}[c]{0.24\linewidth}
         \centering
         \includegraphics[width=\linewidth]{img/maze/N/eval_comparison_N_maze_abl_connect.pdf}
         \caption{N-maze.}\label{fig:maze_ablation_connect_n}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[c]{0.3\linewidth}
+    \begin{subfigure}[c]{0.24\linewidth}
         \centering
         \includegraphics[width=\linewidth]{img/maze/large/eval_comparison_large_maze_abl_connect.pdf}
         \caption{Large maze.}\label{fig:maze_ablation_connect_large}
     \end{subfigure}
-    \hfill\strut{}
+    \hfill\hfill\strut{}
     \caption{Connect ratio ablation on the three mazes. Connecting the frontiers improves sample efficiency where the optimal path covers only a small fraction of the search space.}\label{fig:maze_ablation_connect}
 \end{figure}
