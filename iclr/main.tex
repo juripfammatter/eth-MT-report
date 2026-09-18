@@ -54,7 +54,19 @@ Z\"urich, Switzerland \\
 
 \begin{document}
 
+
 \maketitle
+
+% ------ Teaser figure (between title and abstract) ------
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.95\textwidth}{\centering\vspace{3cm}
+        {\large\color{gray}\textbf{[Teaser figure placeholder]}}
+        \vspace{3cm}}}
+    \caption{\textbf{TODO -- Cool teaser figure illustrating BVER
+    (bidirectional, frontiers, voronoi, overlaid to a cool figure).}}
+    \label{fig:teaser}
+\end{figure}
 
 \begin{abstract}
     Long-horizon tasks with sparse rewards pose an exploration bottleneck for goal-conditioned reinforcement learning: a policy started from the initial state almost never reaches the goal and receives no learning signal. In locomotion and manipulation, this is usually sidestepped with reference motions, hand-designed curricula, or shaped rewards, each requiring demonstrations or task-specific engineering. Automatic start-state or goal curricula avoid this design burden by generating intermediate tasks, but existing methods typically expand from one side only, proposing goals for a fixed start or start states for a fixed goal, so the full distance to the target must be covered from that single direction.
